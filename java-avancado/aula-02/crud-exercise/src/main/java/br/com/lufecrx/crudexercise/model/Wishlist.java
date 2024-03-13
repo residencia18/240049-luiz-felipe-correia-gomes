@@ -1,11 +1,13 @@
 package br.com.lufecrx.crudexercise.model;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,18 +16,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "entity_examples")
-public class EntityExampleModel {
+@Table(name = "wishlist")
+public class Wishlist {
     
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Name example cannot be blank")
-    private String nameExample;
+    private String name;
 
-    // Method to verify if the model is valid
-    public boolean nameExampleIsValid() {
-        return nameExample != null && nameExample.length() > 2;
+    @OneToMany (mappedBy = "wishlist")
+    private List<ProductModel> products;
+
+    public void addToWishlist(ProductModel dto) {
+        this.products.add(dto);
     }
 }
