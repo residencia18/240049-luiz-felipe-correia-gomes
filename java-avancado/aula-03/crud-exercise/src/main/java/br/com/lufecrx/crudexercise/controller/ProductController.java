@@ -1,6 +1,7 @@
 package br.com.lufecrx.crudexercise.controller;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.lufecrx.crudexercise.model.ProductModel;
+import br.com.lufecrx.crudexercise.model.Category;
+import br.com.lufecrx.crudexercise.model.Product;
+import br.com.lufecrx.crudexercise.repository.CategoryRepository;
 import br.com.lufecrx.crudexercise.repository.ProductRepository;
+import br.com.lufecrx.crudexercise.services.ProductService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -23,18 +27,30 @@ import lombok.AllArgsConstructor;
 public class ProductController {
 
     private final ProductRepository repository;
+
+    private final CategoryRepository categoryRepository;
     
     @PostMapping
-    public ResponseEntity<ProductModel> save(@RequestBody @Valid ProductModel dto) {
+    public ResponseEntity<Product> save(@RequestBody @Valid Product dto) {
         if (!dto.productNameIsValid()) {
             return ResponseEntity.badRequest().build();
         }
+        
+        // Verify if the category already exists in the database
+        Optional<Set<Category>> existingCategories = ProductService.validateCategories(dto, categoryRepository);
+
+        if (existingCategories.isPresent()) {
+            dto.setCategories(existingCategories.get());
+        } else {
+            dto.setCategories(Set.of());
+        }
+
         return ResponseEntity.ok(repository.save(dto));
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<ProductModel>> findAll() {
-        Iterable <ProductModel> entityExample = repository.findAll();
+    public ResponseEntity<Iterable<Product>> findAll() {
+        Iterable <Product> entityExample = repository.findAll();
         if (entityExample == null) {
             return ResponseEntity.notFound().build();
         }
@@ -42,18 +58,18 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductModel> findById(@PathVariable Long id) {
-        Optional <ProductModel> opt = repository.findById(id);
+    public ResponseEntity<Product> findById(@PathVariable Long id) {
+        Optional <Product> opt = repository.findById(id);
         if (opt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        ProductModel dto = opt.get();
+        Product dto = opt.get();
         return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductModel> update(@PathVariable Long id, @RequestBody @Valid ProductModel dto) {
-        Optional <ProductModel> opt = repository.findById(id);
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody @Valid Product dto) {
+        Optional <Product> opt = repository.findById(id);
         if (opt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -61,7 +77,7 @@ public class ProductController {
             return ResponseEntity.badRequest().build();
         }
         
-        ProductModel entity = opt.get();
+        Product entity = opt.get();
         
         entity.setProductName(dto.getProductName());
         entity.setPrice(dto.getPrice());
@@ -71,7 +87,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        Optional <ProductModel> opt = repository.findById(id);
+        Optional <Product> opt = repository.findById(id);
         if (opt.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

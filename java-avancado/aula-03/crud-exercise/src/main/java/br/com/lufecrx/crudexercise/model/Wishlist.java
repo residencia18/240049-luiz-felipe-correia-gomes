@@ -29,9 +29,9 @@ public class Wishlist {
     private String name;
 
     @OneToMany (mappedBy = "wishlist")
-    private List<ProductModel> products;
+    private List<Product> products;
 
-    public void addToWishlist(ProductModel product) {
+    public void addToWishlist(Product product) {
         if (this.products == null) {
             this.products = new ArrayList<>();
         }

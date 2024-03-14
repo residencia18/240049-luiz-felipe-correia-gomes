@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.lufecrx.crudexercise.model.ProductModel;
+import br.com.lufecrx.crudexercise.model.Product;
 import br.com.lufecrx.crudexercise.model.Wishlist;
 import br.com.lufecrx.crudexercise.repository.WishlistRepository;
 import jakarta.validation.Valid;
@@ -37,7 +37,7 @@ public class WishlistController {
     }
 
     @PostMapping("/add-product/{id}")
-    public ResponseEntity<Wishlist> addProduct(@RequestBody @Valid ProductModel product, @PathVariable Long id) {
+    public ResponseEntity<Wishlist> addProduct(@RequestBody @Valid Product product, @PathVariable Long id) {
         Optional <Wishlist> opt = repository.findById(id);
 
         if (opt.isEmpty()) {

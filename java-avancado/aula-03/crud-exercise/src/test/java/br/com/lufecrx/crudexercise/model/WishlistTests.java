@@ -8,7 +8,7 @@ public class WishlistTests {
 
     @Test
     public void NewWishlistTest() {
-        ProductModel product = new ProductModel(null, "Product 1", 10.0, null);
+        Product product = new Product(null, "Product 1", 10.0, null, null);
         Wishlist wishlist = new Wishlist(null, "Wishlist 1", null);
         wishlist.addToWishlist(product);
         assertEquals("Wishlist 1", wishlist.getName());
@@ -18,7 +18,7 @@ public class WishlistTests {
 
     @Test
     public void UpdateWishlistTest() {
-        ProductModel product = new ProductModel(null, "Product 1", 10.0, null);
+        Product product = new Product(null, "Product 1", 10.0, null, null);
         Wishlist wishlist = new Wishlist(null, "Wishlist 1", null);
         wishlist.addToWishlist(product);
         wishlist.setName("Wishlist 2");

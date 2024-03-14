@@ -8,14 +8,14 @@ public class ProductModelTests {
 
     @Test
     public void NewProductTest() {
-        ProductModel product = new ProductModel(null, "Product 1", 10.0, null);
+        Product product = new Product(null, "Product 1", 10.0, null, null);
         assertEquals("Product 1", product.getProductName());
         assertEquals(10.0, product.getPrice());
     }
 
     @Test
     public void UpdateProductTest() {
-        ProductModel product = new ProductModel(null, "Product 1", 10.0, null);
+        Product product = new Product(null, "Product 1", 10.0, null, null);
         product.setProductName("Product 2");
         assertEquals("Product 2", product.getProductName());
         assertEquals(10.0, product.getPrice());
@@ -23,13 +23,13 @@ public class ProductModelTests {
 
     @Test
     public void InvalidProductNameTest() {
-        ProductModel product = new ProductModel(null, "P", 10.0, null);
+        Product product = new Product(null, "P", 10.0, null, null);
         assertEquals(false, product.productNameIsValid());
     }
 
     @Test
     public void ValidProductNameTest() {
-        ProductModel product = new ProductModel(null, "Product 1", 10.0, null);
+        Product product = new Product(null, "Product 1", 10.0, null, null);
         assertEquals(true, product.productNameIsValid());
     }
 }
