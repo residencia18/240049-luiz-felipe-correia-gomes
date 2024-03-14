@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lufecrx.crudexercise.model.ProductModel;
 import br.com.lufecrx.crudexercise.model.Wishlist;
 import br.com.lufecrx.crudexercise.repository.WishlistRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -31,12 +32,12 @@ public class WishlistController {
     }
 
     @PostMapping
-    public ResponseEntity<Wishlist> save(@RequestBody Wishlist dto) {
+    public ResponseEntity<Wishlist> save(@RequestBody @Valid Wishlist dto) {
         return ResponseEntity.ok(repository.save(dto));
     }
 
     @PostMapping("/add-product/{id}")
-    public ResponseEntity<Wishlist> addProduct(@RequestBody ProductModel product, @PathVariable Long id) {
+    public ResponseEntity<Wishlist> addProduct(@RequestBody @Valid ProductModel product, @PathVariable Long id) {
         Optional <Wishlist> opt = repository.findById(id);
 
         if (opt.isEmpty()) {
@@ -50,7 +51,7 @@ public class WishlistController {
     }
 
     @PutMapping ("/{id}")
-    public ResponseEntity<Wishlist> update(@RequestBody Wishlist dto, @PathVariable Long id) {
+    public ResponseEntity<Wishlist> update(@RequestBody @Valid Wishlist dto, @PathVariable Long id) {
         Optional <Wishlist> opt = repository.findById(id);
         if (opt.isEmpty()) {
             return ResponseEntity.notFound().build();

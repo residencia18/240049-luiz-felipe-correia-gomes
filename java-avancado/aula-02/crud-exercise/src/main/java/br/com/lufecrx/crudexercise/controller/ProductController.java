@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lufecrx.crudexercise.model.ProductModel;
 import br.com.lufecrx.crudexercise.repository.ProductRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -24,7 +25,7 @@ public class ProductController {
     private final ProductRepository repository;
     
     @PostMapping
-    public ResponseEntity<ProductModel> save(@RequestBody ProductModel dto) {
+    public ResponseEntity<ProductModel> save(@RequestBody @Valid ProductModel dto) {
         if (!dto.productNameIsValid()) {
             return ResponseEntity.badRequest().build();
         }
@@ -51,7 +52,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductModel> update(@PathVariable Long id) {
+    public ResponseEntity<ProductModel> update(@PathVariable Long id, @RequestBody @Valid ProductModel dto) {
         Optional <ProductModel> opt = repository.findById(id);
         if (opt.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -59,7 +60,12 @@ public class ProductController {
         if (!opt.get().productNameIsValid()) {
             return ResponseEntity.badRequest().build();
         }
-        ProductModel entity = repository.save(opt.get());
+        
+        ProductModel entity = opt.get();
+        
+        entity.setProductName(dto.getProductName());
+        entity.setPrice(dto.getPrice());
+
         return ResponseEntity.ok(entity);
     }
 
