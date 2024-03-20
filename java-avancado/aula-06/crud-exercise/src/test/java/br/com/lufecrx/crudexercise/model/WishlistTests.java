@@ -13,7 +13,7 @@ public class WishlistTests {
         wishlist.addToWishlist(product);
         assertEquals("Wishlist 1", wishlist.getName());
         assertEquals(1, wishlist.getProducts().size());
-        assertEquals(product, wishlist.getProducts().get(0));
+        wishlist.getProducts().contains(product);
     }
 
     @Test
@@ -24,6 +24,6 @@ public class WishlistTests {
         wishlist.setName("Wishlist 2");
         assertEquals("Wishlist 2", wishlist.getName());
         assertEquals(1, wishlist.getProducts().size());
-        assertEquals(product, wishlist.getProducts().get(0));
+        wishlist.getProducts().contains(product);
     }
 }

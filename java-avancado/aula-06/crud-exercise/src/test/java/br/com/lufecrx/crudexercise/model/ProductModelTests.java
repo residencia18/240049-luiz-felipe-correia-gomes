@@ -20,16 +20,4 @@ public class ProductModelTests {
         assertEquals("Product 2", product.getProductName());
         assertEquals(10.0, product.getPrice());
     }
-
-    @Test
-    public void InvalidProductNameTest() {
-        Product product = new Product(null, "P", 10.0, null, null);
-        assertEquals(false, product.productNameIsValid());
-    }
-
-    @Test
-    public void ValidProductNameTest() {
-        Product product = new Product(null, "Product 1", 10.0, null, null);
-        assertEquals(true, product.productNameIsValid());
-    }
 }

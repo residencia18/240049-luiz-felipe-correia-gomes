@@ -45,9 +45,4 @@ public class Product {
                joinColumns = @JoinColumn(name = "product_id"),
                inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories;
-
-    // Method to verify if the model is valid
-    public boolean productNameIsValid() {
-        return productName != null && productName.length() > 2;
-    }
 }

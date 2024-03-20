@@ -13,92 +13,45 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lufecrx.crudexercise.model.Category;
-import br.com.lufecrx.crudexercise.repository.CategoryRepository;
+import br.com.lufecrx.crudexercise.services.CategoryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @AllArgsConstructor
-@Slf4j
 @RequestMapping("/categories")
 public class CategoryController {
 
-    private final CategoryRepository repository;
+    private final CategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<Iterable<Category>> findAll() {
-        log.info("Searching for all categories");
-        Iterable <Category> entities = repository.findAll();
-        
-        if (entities == null) {
-            log.error("No categories found.");
-            return ResponseEntity.notFound().build();
-        }
-
-        log.info("Categories found successfully.");
+        Iterable<Category> entities = categoryService.getAllCategories();
         return ResponseEntity.ok(entities);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Category> findById(@PathVariable Long id) {
-        log.info("Searching for category with id {}", id);
-        Optional <Category> opt = repository.findById(id);
-        
-        if (opt.isEmpty()) {
-            log.error("Category with id {} not found.", id);
-            return ResponseEntity.notFound().build();
-        }
-        Category dto = opt.get();
-
-        log.info("Category with id {} found successfully.", id);
-        return ResponseEntity.ok(dto);
+        Optional<Category> opt = categoryService.getCategoryById(id);
+        return ResponseEntity.ok(opt.get());
     }
 
     @PostMapping
-    public ResponseEntity<Category> save(@RequestBody @Valid Category dto) {
-        log.info("Saving category with name {}", dto.getCategoryName());
-
-        // Verify if the category already exists in the database
-        Optional<Category> existingCategory = repository.findByCategoryName(dto.getCategoryName());
-        if (existingCategory.isPresent()) {
-            log.error("Category with name {} already exists.", dto.getCategoryName());
-            return ResponseEntity.badRequest().build();
-        }
-        
-        log.info("Category with name {} saved successfully.", dto.getCategoryName());
-        return ResponseEntity.ok(repository.save(dto));   
+    public ResponseEntity<String> save(@RequestBody @Valid Category dto) {
+        categoryService.createCategory(dto);
+        return ResponseEntity.ok("Category created successfully.");   
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> update(@RequestBody @Valid Category dto, @PathVariable Long id) {
-        log.info("Updating category with id {}", id);
-        Optional <Category> opt = repository.findById(id);
-        
-        if (opt.isEmpty()) {
-            log.error("Category with id {} not found.", id);
-            return ResponseEntity.notFound().build();
-        }
-        Category entity = opt.get();
-        entity.setCategoryName(dto.getCategoryName());
-
-        log.info("Category with id {} updated successfully.", id);
-        return ResponseEntity.ok(repository.save(entity));
+    public ResponseEntity<String> update(@RequestBody @Valid Category dto, @PathVariable Long id) {
+        categoryService.updateCategory(id, dto);
+        return ResponseEntity.ok("Category updated successfully.");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        log.info("Deleting category with id {}", id);
-        Optional <Category> opt = repository.findById(id);
-        
-        if (opt.isEmpty()) {
-            log.error("Category with id {} not found.", id);
-            return ResponseEntity.notFound().build();
-        }
-        repository.delete(opt.get());
-
-        log.info("Category with id {} deleted successfully.", id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.ok("Category deleted successfully.");
     }
 
 }

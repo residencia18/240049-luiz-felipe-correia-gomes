@@ -1,7 +1,7 @@
 package br.com.lufecrx.crudexercise.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,12 +29,19 @@ public class Wishlist {
     private String name;
 
     @OneToMany (mappedBy = "wishlist")
-    private List<Product> products;
+    private Set<Product> products;
 
     public void addToWishlist(Product product) {
+        // Initialize the products set if it's null
         if (this.products == null) {
-            this.products = new ArrayList<>();
+            this.products = new HashSet<>();
         }
         this.products.add(product);
+    }
+
+    public void removeFromWishlist(Product product) {
+        if (this.products != null) {
+            this.products.remove(product);
+        }
     }
 }

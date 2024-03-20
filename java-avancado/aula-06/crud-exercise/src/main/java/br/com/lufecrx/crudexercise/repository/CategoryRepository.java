@@ -8,6 +8,8 @@ import br.com.lufecrx.crudexercise.model.Category;
 
 public interface CategoryRepository extends CrudRepository<Category, Long> {
 
-    Optional<Category> findByCategoryName(String categoryName);
+    Optional<Category> findByName(String name);
+
+    boolean existsByName(String name);
     
 }

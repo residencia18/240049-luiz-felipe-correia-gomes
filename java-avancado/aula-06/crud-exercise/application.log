@@ -159,3 +159,89 @@
 2024-03-19T16:40:42.535-03:00  INFO 9872 --- [http-nio-8080-exec-1] b.c.l.c.c.CategoryController             : Category with name Eletrodoméstico saved successfully.
 2024-03-19T16:40:45.370-03:00  INFO 9872 --- [http-nio-8080-exec-2] b.c.l.c.c.CategoryController             : Saving category with name Eletrodoméstico
 2024-03-19T16:40:45.372-03:00 ERROR 9872 --- [http-nio-8080-exec-2] b.c.l.c.c.CategoryController             : Category with name Eletrodoméstico already exists.
+2024-03-20T16:31:22.845-03:00  INFO 18084 --- [restartedMain] b.c.l.c.CrudExerciseApplication          : Starting CrudExerciseApplication using Java 17.0.10 with PID 18084 (C:\Users\85938454522\Desktop\Workspace\240049-luiz-felipe-correia-gomes\java-avancado\aula-06\crud-exercise\target\classes started by 85938454522 in C:\Users\85938454522\Desktop\Workspace\240049-luiz-felipe-correia-gomes\java-avancado\aula-06\crud-exercise)
+2024-03-20T16:31:22.845-03:00  INFO 18084 --- [restartedMain] b.c.l.c.CrudExerciseApplication          : No active profile set, falling back to 1 default profile: "default"
+2024-03-20T16:31:22.897-03:00  INFO 18084 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-03-20T16:31:22.897-03:00  INFO 18084 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-03-20T16:31:23.512-03:00  INFO 18084 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-03-20T16:31:23.566-03:00  INFO 18084 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 42 ms. Found 3 JPA repository interfaces.
+2024-03-20T16:31:24.063-03:00  INFO 18084 --- [restartedMain] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+2024-03-20T16:31:24.121-03:00  INFO 18084 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1224 ms
+2024-03-20T16:31:24.245-03:00  INFO 18084 --- [restartedMain] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-03-20T16:31:24.298-03:00  INFO 18084 --- [restartedMain] o.h.Version                              : HHH000412: Hibernate ORM core version 6.4.4.Final
+2024-03-20T16:31:24.335-03:00  INFO 18084 --- [restartedMain] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+2024-03-20T16:31:24.511-03:00  INFO 18084 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-03-20T16:31:24.555-03:00  INFO 18084 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2024-03-20T16:31:24.711-03:00  INFO 18084 --- [restartedMain] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4b032769
+2024-03-20T16:31:24.713-03:00  INFO 18084 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2024-03-20T16:31:24.747-03:00  WARN 18084 --- [restartedMain] o.h.o.deprecation                        : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-03-20T16:31:25.467-03:00  INFO 18084 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-03-20T16:31:25.534-03:00  INFO 18084 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-03-20T16:31:25.543-03:00  WARN 18084 --- [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'categoryController' defined in file [C:\Users\85938454522\Desktop\Workspace\240049-luiz-felipe-correia-gomes\java-avancado\aula-06\crud-exercise\target\classes\br\com\lufecrx\crudexercise\controller\CategoryController.class]: Unsatisfied dependency expressed through constructor parameter 0: No qualifying bean of type 'br.com.lufecrx.crudexercise.services.CategoryService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+2024-03-20T16:31:25.544-03:00  INFO 18084 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-03-20T16:31:25.560-03:00  INFO 18084 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2024-03-20T16:31:25.563-03:00  INFO 18084 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2024-03-20T16:31:25.577-03:00  INFO 18084 --- [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2024-03-20T16:31:25.596-03:00 ERROR 18084 --- [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of constructor in br.com.lufecrx.crudexercise.controller.CategoryController required a bean of type 'br.com.lufecrx.crudexercise.services.CategoryService' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'br.com.lufecrx.crudexercise.services.CategoryService' in your configuration.
+
+2024-03-20T16:32:45.697-03:00  INFO 14216 --- [restartedMain] b.c.l.c.CrudExerciseApplication          : Starting CrudExerciseApplication using Java 17.0.10 with PID 14216 (C:\Users\85938454522\Desktop\Workspace\240049-luiz-felipe-correia-gomes\java-avancado\aula-06\crud-exercise\target\classes started by 85938454522 in C:\Users\85938454522\Desktop\Workspace\240049-luiz-felipe-correia-gomes\java-avancado\aula-06\crud-exercise)
+2024-03-20T16:32:45.704-03:00  INFO 14216 --- [restartedMain] b.c.l.c.CrudExerciseApplication          : No active profile set, falling back to 1 default profile: "default"
+2024-03-20T16:32:45.748-03:00  INFO 14216 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-03-20T16:32:45.748-03:00  INFO 14216 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-03-20T16:32:46.343-03:00  INFO 14216 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-03-20T16:32:46.397-03:00  INFO 14216 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 41 ms. Found 3 JPA repository interfaces.
+2024-03-20T16:32:46.863-03:00  INFO 14216 --- [restartedMain] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8080 (http)
+2024-03-20T16:32:46.915-03:00  INFO 14216 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1164 ms
+2024-03-20T16:32:47.036-03:00  INFO 14216 --- [restartedMain] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-03-20T16:32:47.080-03:00  INFO 14216 --- [restartedMain] o.h.Version                              : HHH000412: Hibernate ORM core version 6.4.4.Final
+2024-03-20T16:32:47.111-03:00  INFO 14216 --- [restartedMain] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+2024-03-20T16:32:47.292-03:00  INFO 14216 --- [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-03-20T16:32:47.314-03:00  INFO 14216 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2024-03-20T16:32:47.444-03:00  INFO 14216 --- [restartedMain] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@b3474ac
+2024-03-20T16:32:47.444-03:00  INFO 14216 --- [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2024-03-20T16:32:47.482-03:00  WARN 14216 --- [restartedMain] o.h.o.deprecation                        : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-03-20T16:32:48.246-03:00  INFO 14216 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : SQL Warning Code: 0, SQLState: 00000
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : relação "product_category" não existe, ignorando
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : SQL Warning Code: 0, SQLState: 00000
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : relação "product_category" não existe, ignorando
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : SQL Warning Code: 0, SQLState: 00000
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : relação "products" não existe, ignorando
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : SQL Warning Code: 0, SQLState: 00000
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : tabela "categories" não existe, ignorando
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : SQL Warning Code: 0, SQLState: 00000
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : tabela "product_category" não existe, ignorando
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : SQL Warning Code: 0, SQLState: 00000
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : tabela "products" não existe, ignorando
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : SQL Warning Code: 0, SQLState: 00000
+2024-03-20T16:32:48.270-03:00  WARN 14216 --- [restartedMain] o.h.e.j.s.SqlExceptionHelper             : tabela "wishlist" não existe, ignorando
+2024-03-20T16:32:48.304-03:00  INFO 14216 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-03-20T16:32:48.668-03:00  WARN 14216 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-03-20T16:32:48.994-03:00  INFO 14216 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2024-03-20T16:32:49.014-03:00  INFO 14216 --- [restartedMain] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8080 (http) with context path ''
+2024-03-20T16:32:49.029-03:00  INFO 14216 --- [restartedMain] b.c.l.c.CrudExerciseApplication          : Started CrudExerciseApplication in 3.702 seconds (process running for 4.222)
+2024-03-20T16:32:49.032-03:00  INFO 14216 --- [restartedMain] b.c.l.c.CrudExerciseApplication          : Application started successfully!
+2024-03-20T16:33:02.110-03:00  INFO 14216 --- [http-nio-8080-exec-3] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2024-03-20T16:33:02.112-03:00  INFO 14216 --- [http-nio-8080-exec-3] o.s.w.s.DispatcherServlet                : Completed initialization in 1 ms
+2024-03-20T16:33:02.689-03:00  INFO 14216 --- [http-nio-8080-exec-4] o.s.a.AbstractOpenApiResource            : Init duration for springdoc-openapi is: 337 ms
+2024-03-20T16:33:50.159-03:00  INFO 14216 --- [http-nio-8080-exec-6] b.c.l.c.s.CategoryService                : Getting category by ID 5
+2024-03-20T16:33:50.201-03:00 ERROR 14216 --- [http-nio-8080-exec-6] b.c.l.c.e.c.CategoryNotFoundException    : Category with id 5 not found.
+2024-03-20T16:33:50.203-03:00  WARN 14216 --- [http-nio-8080-exec-6] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [br.com.lufecrx.crudexercise.exceptions.category.CategoryNotFoundException: Category with id 5 not found.]
+2024-03-20T16:33:58.164-03:00  INFO 14216 --- [http-nio-8080-exec-7] b.c.l.c.s.CategoryService                : Getting category by ID 2
+2024-03-20T16:33:58.167-03:00 ERROR 14216 --- [http-nio-8080-exec-7] b.c.l.c.e.c.CategoryNotFoundException    : Category with id 2 not found.
+2024-03-20T16:33:58.167-03:00  WARN 14216 --- [http-nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [br.com.lufecrx.crudexercise.exceptions.category.CategoryNotFoundException: Category with id 2 not found.]

@@ -6,4 +6,5 @@ import br.com.lufecrx.crudexercise.model.Wishlist;
 
 public interface WishlistRepository extends CrudRepository<Wishlist, Long> {
     
+    boolean existsByName(String name);
 }

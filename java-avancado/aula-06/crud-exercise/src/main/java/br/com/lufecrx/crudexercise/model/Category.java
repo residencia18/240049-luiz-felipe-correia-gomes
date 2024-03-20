@@ -22,6 +22,6 @@ public class Category {
     private Long id;
 
     @NotBlank(message = "Category name cannot be blank")
-    private String categoryName;
+    private String name;
     
 }
