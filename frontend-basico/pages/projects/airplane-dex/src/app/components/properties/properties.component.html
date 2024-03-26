@@ -1,0 +1,6 @@
+  <h2>Properties List</h2>
+  <ul *ngIf="vehicleSelected" class="properties-list">
+    <li *ngFor="let property of getObjectKeys(vehicleSelected)" (click)="selectProperty(property)" appJumpingEffect>
+      {{ property }}
+    </li>
+  </ul>

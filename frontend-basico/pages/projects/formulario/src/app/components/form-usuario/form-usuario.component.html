@@ -1,0 +1,64 @@
+<form [formGroup]="formUsuario" (ngSubmit)="submitForm()">
+    <mat-form-field>
+        <input matInput formControlName="nome" placeholder="Nome de usuário">
+        <mat-error *ngIf="formUsuario.get('nome')?.invalid">Nome inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput type="password" formControlName="senha" placeholder="Senha">
+        <mat-error *ngIf="formUsuario.get('senha')?.invalid">Senha fraca</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput formControlName="email" placeholder="Email">
+        <mat-error *ngIf="formUsuario.get('email')?.invalid">Email inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput formControlName="nomeCompleto.primeiroNome" placeholder="Primeiro nome">
+        <mat-error *ngIf="formUsuario.get('nomeCompleto.primeiroNome')?.invalid">Primeiro nome inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput formControlName="nomeCompleto.sobrenome" placeholder="Sobrenome">
+        <mat-error *ngIf="formUsuario.get('nomeCompleto.sobrenome')?.invalid">Sobrenome inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput formControlName="telefone" placeholder="Telefone">
+        <mat-error *ngIf="formUsuario.get('telefone')?.invalid">Telefone inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput formControlName="endereco" placeholder="Endereço">
+        <mat-error *ngIf="formUsuario.get('endereco')?.invalid">Endereço inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput formControlName="dataNascimento" placeholder="Data de Nascimento">
+        <mat-error *ngIf="formUsuario.get('dataNascimento')?.invalid">Data de Nascimento inválida</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Gênero</mat-label>
+        <mat-select formControlName="genero">
+            <mat-option value="masculino">Masculino</mat-option>
+            <mat-option value="feminino">Feminino</mat-option>
+            <mat-option value="outro">Outro</mat-option>
+        </mat-select>
+        <mat-error *ngIf="formUsuario.get('genero')?.invalid">Gênero inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Profissão</mat-label>
+        <mat-select formControlName="profissao">
+            <mat-option value="engenheiro">Engenheiro</mat-option>
+            <mat-option value="médico">Médico</mat-option>
+            <mat-option value="professor">Professor</mat-option>
+            <mat-option value="outro">Outro</mat-option>
+        </mat-select>
+        <mat-error *ngIf="formUsuario.get('profissao')?.invalid">Profissão inválida</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Submit</button>
+</form>

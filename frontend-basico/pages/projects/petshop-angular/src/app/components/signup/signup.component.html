@@ -1,0 +1,20 @@
+<div class="signup-container">
+  <mat-card class="signup-card">
+    <mat-card-header>
+      <mat-card-title>Crie sua conta</mat-card-title>
+    </mat-card-header>
+    <form [formGroup]="formSignup" (ngSubmit)="signup()">
+      <mat-form-field class="full-width">
+        <input matInput type="email" placeholder="Email" formControlName="email" (input)="clearErrorMessage()">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <input matInput type="password" placeholder="Senha" formControlName="password" (input)="clearErrorMessage()">
+      </mat-form-field>
+      <a class="login" routerLink="/login">Já possui uma conta? Clique aqui</a>
+      <div class="error" *ngIf="getErrorMessage()">{{ getErrorMessage() }}</div>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" type="submit" [disabled]="formSignup.invalid">Cadastrar</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

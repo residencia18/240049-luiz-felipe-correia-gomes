@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flex Turismos</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="script.js"></script>
+</head>
+
+<body>
+
+    <!-- cabeçalho da página -->
+    <header>
+        <div class="flex-container menu">
+            <div>
+                <h1>FlexTurismos</h1>
+            </div>
+            <!-- space between -->
+            <ul class="list-items">
+                <li><a href="#quem-somos">Quem Somos</a></li>
+                <li><a href="#services">Serviços</a></li>
+                <li><a href="#plans">Viagens</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <!-- apresentação da proposta do site -->
+        <div class="flex-container pagePresentation">
+            <div class="textPresentation">
+                <h1>Flex <br>Turismos</h1>
+                <p>O melhor serviço para você!</p>
+                <a href="#" class="btn">Saiba Mais!</a>
+            </div>
+
+            <div>
+                <div><img src="./images/0-main.png" alt="banner de apresentação"></div>
+            </div>
+        </div>
+
+        <!-- apresentação da equipe -->
+        <div class="flex-container" id="quem-somos">
+            <div>
+                <h2>Quem somos</h2>
+                <p>It is a long established fact that a reader will be distracted by the readable content of a page when
+                    looking at its layout. </p>
+                <p>The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as
+                    opposed
+                    to using 'Content here, content here', making it look like readable English.</p>
+            </div>
+
+            <div>
+                <img src="./images/1-quem-somos.png" alt="balcão de atendimento">
+            </div>
+        </div>
+
+        <div class="services-container">
+            <div class="flex-container" id="services">
+                <div>
+                    <h2>Serviços</h2>
+                </div>
+
+                <div class="list-services">
+                    <div class="item-services">
+                        <div><img src="./images/icon-2.png" alt="hospedagens"></div>
+                        <p>Hospedagens</p>
+                        <a href="#">Comprar Agora</a>
+                    </div>
+
+                    <div class="item-services">
+                        <div><img src="./images/icon-1.png" alt="pacote de viagens"></div>
+                        <p>Pacotes de viagens</p>
+                        <a href="#">Comprar Agora</a>
+                    </div>
+
+                    <div class="item-services">
+                        <div><img src="./images/icon-3.png" alt="roteiros personalizados"></div>
+                        <p>Roteiros personalizados</p>
+                        <a href="#">Comprar Agora</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- planos do site -->
+        <div class="flex-container" id="plans">
+            <div>
+                <h2>Viagens</h2>
+            </div>
+
+            <div class="list-plans">
+                <div class="item-plans" id="Salvador">
+                    <h3 class="destino">Salvador</h3>
+                    <img src="images/salvador.jpeg" alt="Imagem de Salvador">
+                    <ul class="list-informations">
+                        <li class="transporte">Aéreo ida e volta</li>
+                        <li class="diarias">03 diárias</li>
+                        <li class="alimentacao">Café da Manhã</li>
+                    </ul>
+                    <div class="info-item-plans">
+                        <h2 class="plan-price">R$670,00</h2>
+                        <p class="taxas">Taxas Inclusas</p>
+                        <p class="parcelas">Em até 10x sem juros</p>
+                    </div>
+                    <button class="comprar-viagem">Comprar</button>
+                </div>
+
+                <div class="item-plans" id="Fortaleza">
+                    <h3 class="destino">Fortaleza</h3>
+                    <img src="images/fortaleza.jpg" alt="Imagem de Fortaleza"> 
+                    <ul class="list-informations">
+                        <li class="transporte">Aéreo ida e volta</li>
+                        <li class="diarias">06 diárias</li>
+                        <li class="alimentacao">Café da Manhã</li>                        
+                    </ul>
+                    <div class="info-item-plans">
+                        <h2 class="plan-price">R$1513,00</h2>
+                        <p class="taxas">Taxas Inclusas</p>
+                        <p class="parcelas">Em até 10x sem juros</p>
+                    </div>
+                    <button class="comprar-viagem">Comprar</button>
+                </div>
+
+                <div class="item-plans" id="Campinas">
+                    <h3 class="destino">Campinas</h3>
+                    <img src="images/campinas.jpg" alt="Imagem de Campinas">
+                    <ul class="list-informations">
+                        <li class="transporte">Aéreo ida e volta</li>
+                        <li class="diarias">04 diárias</li>
+                        <li class="alimentacao">Café da Manhã</li>
+                    </ul>
+                    <div class="info-item-plans">
+                        <h2 class="plan-price">R$900,00</h2>
+                        <p class="taxas">Taxas Inclusas</p>
+                        <p class="parcelas">Em até 10x sem juros</p>
+                    </div>
+                    <button class="comprar-viagem">Comprar</button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="flex-container footer">
+            <p>&copy; 2023 CSS Flexbox</p>
+            <p>Desenvolvido por: @lufecr_</p>
+        </div>
+    </footer>
+</body>
+
+</html>

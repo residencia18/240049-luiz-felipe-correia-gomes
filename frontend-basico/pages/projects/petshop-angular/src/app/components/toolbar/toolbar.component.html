@@ -1,0 +1,17 @@
+<mat-toolbar color="primary">
+  <span class="left-section">
+    <button *ngIf="isAuthenticated()" mat-icon-button [matMenuTriggerFor]="menu" class="menu-button">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </span>
+  <span>PetShop</span>
+  <span class="right-section">
+    <app-treatment-search *ngIf="isAuthenticated()"></app-treatment-search>
+  </span>
+</mat-toolbar>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item routerLink="/cadastro">Cadastro de Atendimento</button>
+  <button mat-menu-item routerLink="/listagem">Lista de Atendimentos</button>
+  <button mat-menu-item (click)="logout()">Sair</button>
+</mat-menu>

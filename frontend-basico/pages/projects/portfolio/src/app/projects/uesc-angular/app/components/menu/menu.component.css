@@ -1,0 +1,24 @@
+/* Estiliza a área do menu */
+.menu {
+    height: 400px;
+    width: 200px;
+    background-color: #f2f2f2;
+    padding: 10px;
+}
+
+/* Estiliza a lista de itens do menu */
+.menu-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.menu-list li {
+    margin-bottom: 10px;
+    /* Ajuste de espaçamento entre os itens */
+    font-size: 1.4em;
+}
+
+.menu-list li:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}

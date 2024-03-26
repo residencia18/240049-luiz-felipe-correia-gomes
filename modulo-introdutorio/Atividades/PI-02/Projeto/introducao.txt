@@ -1,0 +1,7 @@
+Introdução de Git para o programa de Residência em TIC.
+
+TODO
+Adicionar recurso de navbar
+
+Alterações da nova versão 2.0
+

@@ -1,0 +1,12 @@
+.dex {
+  display: flex;
+  justify-content: space-around;
+  background-color: #E5E1DA;
+  padding: 30px;
+  /* Borda radius na parte de baixo */
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+

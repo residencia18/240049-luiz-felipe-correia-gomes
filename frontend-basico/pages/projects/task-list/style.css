@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.page-header {
+    background-color: #3498db;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+.page-header h1 {
+    margin: 0;
+}
+
+.main {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+.title-list {
+    background-color: #ecf0f1;
+    padding: 10px;
+    border-bottom: 1px solid #bdc3c7;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+}
+
+.task-list li {
+    padding: 10px;
+    border-bottom: 1px solid #bdc3c7;
+}
+
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+
+input[type="text"] {
+    width: 80%;
+    padding: 8px;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+
+/* Estilo para o botão de remover */
+button.remove-button {
+    background-color: #ff6b6b; /* Cor de fundo vermelha */
+    color: #fff; /* Cor do texto branco */
+    padding: 8px 12px; /* Espaçamento interno */
+    border: none; /* Sem borda */
+    border-radius: 5px; /* Borda arredondada */
+    cursor: pointer; /* Cursor de mão ao passar por cima */
+    margin-left: 10px; /* Margem à esquerda para separar do texto */
+}
+
+/* Estilo para o botão de remover quando o mouse passa por cima */
+button.remove-button:hover {
+    background-color: #ff4f4f; /* Cor de fundo alterada ao passar o mouse */
+}
+
+/* Estilo para o checkbox */
+input[type="checkbox"] {
+    margin-right: 8px; /* Margem à direita para separar de outros elementos */
+}
+
+
+li.completed {
+    text-decoration: line-through;
+    color: #7f8c8d;
+}

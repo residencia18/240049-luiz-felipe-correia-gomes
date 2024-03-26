@@ -1,0 +1,6 @@
+  <h2>Vehicles List</h2>
+  <ul *ngIf="vehiclesList" class="vehicles-list">
+    <li *ngFor="let vehicle of vehiclesList" (click)="selectVehicle(vehicle)" appJumpingEffect appRotatingBackgroundColor>
+      {{ vehicle.Name }}
+    </li>
+  </ul>

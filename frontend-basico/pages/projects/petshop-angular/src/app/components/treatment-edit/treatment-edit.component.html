@@ -1,0 +1,67 @@
+<h2>Editar Atendimentos</h2>
+
+<table class="mat-elevation-z8">
+  <ng-container *ngFor="let treatment of treatments">
+    <ng-container *ngIf="!treatment.editing; else editMode">
+      <tr>
+        <td>{{ treatment.client }}</td>
+        <td>{{ treatment.animal }}</td>
+        <td>{{ treatment.service }}</td>
+        <td>{{ treatment.date }}</td>
+        <td>{{ treatment.observations }}</td>
+        <td>
+          <button mat-icon-button (click)="toggleEditMode(treatment)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </tr>
+    </ng-container>
+    <ng-template #editMode>
+      <tr>
+        <td colspan="6">
+          <form class="edit-form" [formGroup]="editForm" (ngSubmit)="saveChanges(treatment)">
+
+            <mat-form-field class="form-field">
+              <input matInput formControlName="client" placeholder="Cliente">
+            </mat-form-field>
+
+            <mat-form-field class="form-field">
+              <input matInput formControlName="animal" placeholder="Animal">
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Tipo de Serviço</mat-label>
+              <mat-select formControlName="service" placeholder="Selecione o tipo de serviço">
+                <mat-option value="Banho e tosa">Banho e tosa</mat-option>
+                <mat-option value="Corte de unhas e limpeza de ouvidos">Corte de unhas e limpeza de ouvidos</mat-option>
+                <mat-option value="Consultas veterinárias">Consultas veterinárias</mat-option>
+                <mat-option value="Estética e beleza">Estética e beleza</mat-option>
+                <mat-option value="Hospedagem e creche">Hospedagem e creche</mat-option>
+                <mat-option value="Alimentação e produtos">Alimentação e produtos</mat-option>
+                <mat-option value="Treinamento e adestramento">Treinamento e adestramento</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Data</mat-label>
+              <input matInput type="date" formControlName="date" placeholder="Data">
+            </mat-form-field>
+
+            <mat-form-field class="form-field">
+              <input matInput formControlName="observations" placeholder="Observações">
+            </mat-form-field>
+
+            <div class="button-container">
+              <button mat-icon-button type="submit">
+                <mat-icon>done</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="cancelEdit(treatment)">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </div>
+          </form>
+        </td>
+      </tr>
+    </ng-template>
+  </ng-container>
+</table>

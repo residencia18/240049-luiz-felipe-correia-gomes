@@ -1,0 +1,18 @@
+.properties-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.properties-list li {
+  cursor: pointer;
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: #92C7CF;
+  color: #fff;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.properties-list li:hover {
+  background-color: #AAD7D9;
+}

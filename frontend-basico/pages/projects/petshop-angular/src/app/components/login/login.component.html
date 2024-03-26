@@ -1,0 +1,20 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>Login</mat-card-title>
+    </mat-card-header>
+    <form [formGroup]="formLogin" (ngSubmit)="login()">
+      <mat-form-field class="full-width">
+        <input matInput type="email" placeholder="Email" formControlName="email" (input)="clearErrorMessage()">
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <input matInput type="password" placeholder="Senha" formControlName="password" (input)="clearErrorMessage()">
+      </mat-form-field>
+      <a class="signup" routerLink="/signup">Não tem uma conta? Cadastre-se</a>
+      <div class="error" *ngIf="getErrorMessage()">{{ getErrorMessage() }}</div>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" type="submit" [disabled]="formLogin.invalid">Entrar</button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>

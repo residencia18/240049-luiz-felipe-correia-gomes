@@ -1,0 +1,3 @@
+Documentação da API do projeto pode ser encontrada iniciando a aplicação e acessando o link abaixo:
+
+http://localhost:8080/swagger-ui/index.html#

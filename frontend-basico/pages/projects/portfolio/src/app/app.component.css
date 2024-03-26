@@ -1,0 +1,6 @@
+.content-wrapper {
+  max-width: 800px; /* Defina a largura máxima desejada */
+  margin: 0 auto; /* Isso centralizará a caixa na página */
+  padding: 20px; /* Adicione algum espaçamento interno se desejar */
+}
+

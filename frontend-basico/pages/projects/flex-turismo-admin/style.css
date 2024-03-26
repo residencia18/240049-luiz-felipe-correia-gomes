@@ -1,0 +1,507 @@
+/* configurações gerais */
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Open Sans", sans-serif;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul li a {
+  text-decoration: none;
+}
+
+div img {
+  display: flex;
+  width: 100%;
+}
+
+/* cabeçalho da página */
+header {
+  background-color: #122a57;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  color: whitesmoke;
+}
+
+header .list-items {
+  display: flex;
+  max-width: 260px;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .menu {
+  justify-content: space-between;
+}
+
+.list-items li a {
+  color: whitesmoke;
+  transition: color 0.3s;
+}
+
+.list-items li a:hover {
+  color: orange;
+}
+
+/* apresentação do site */
+.pagePresentation {
+  height: 100vh;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pagePresentation .textPresentation {
+  min-height: 200px;
+}
+
+.textPresentation h1 {
+  font-size: 48px;
+  color: #122a57;
+  margin-bottom: 10px;
+}
+
+.btn,
+.comprar-viagem {
+  background-color: #122a57;
+  color: #f5f5f5;
+  text-align: center;
+  border-radius: 20px;
+  width: 220px;
+  display: block;
+  text-decoration: none;
+  height: 50px;
+  line-height: 50px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  transition: color 0.3s;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  color: orange;
+}
+
+.comprar-viagem:hover {
+  background-color: #0c192e;
+  cursor: pointer;
+}
+
+/* apresentação da equipe */
+#quem-somos {
+  flex-direction: row-reverse;
+}
+
+#quem-somos h2 {
+  font-size: 32px;
+  color: #122a57;
+  display: flex;
+  margin-bottom: 20px;
+}
+
+#quem-somos h2:before {
+  content: "";
+  height: 40px;
+  width: 5px;
+  margin-right: 5px;
+  background-color: #122a57;
+  position: relative;
+}
+
+#quem-somos p {
+  margin-bottom: 10px;
+  width: 90%;
+}
+
+#quem-somos img {
+  min-width: 420px;
+}
+
+/* serviços da página */
+.services-container {
+  background-color: #122a57;
+  width: 100%;
+}
+
+#services {
+  flex-direction: column;
+  padding-top: 50px;
+  padding-bottom: 100px;
+}
+
+#services h2 {
+  color: #f5f5f5;
+  font-size: 32px;
+  margin-bottom: 20px;
+}
+
+.list-services {
+  display: flex;
+  justify-content: space-between;
+}
+
+.list-services .item-services {
+  text-align: center;
+}
+
+.item-services img {
+  width: 80%;
+  margin: auto;
+}
+
+.item-services p {
+  color: #f5f5f5;
+  font-weight: 700px;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.item-services a {
+  width: 120px;
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+  margin-top: 20px;
+  padding: 5px 10px;
+  font-size: 14px;
+  color: #122a57;
+  text-decoration: none;
+  font-weight: 700;
+  transition: background-color 0.3s;
+}
+
+.item-services a:hover {
+  background-color: orange;
+}
+
+/* planos do site */
+#plans {
+  flex-direction: column;
+  min-height: 100vh;
+  padding-top: 50px;
+}
+
+#plans h2 {
+  font-size: 32px;
+  margin-bottom: 1rem;
+}
+
+.list-plans {
+  display: flex;
+  justify-content: space-between;
+}
+
+.item-plans {
+  flex: 1;
+  border: 4px solid #122a57;
+  align-self: flex-end;
+  margin-right: 20px;
+  padding: 10px;
+  max-width: 240px;
+}
+
+.item-plans h3 {
+  font-size: 24px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.item-plans h3:after {
+  content: "";
+  background-color: #122a57;
+  width: 100%;
+  height: 3px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.item-plans ul {
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.item-plans ul li {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.item-plans ul li:before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background-color: #122a57;
+  margin-right: 5px;
+}
+
+.item-plans .comprar-viagem {
+  margin: auto;
+  margin-bottom: 20px;
+  border: none;
+}
+
+.item-plans button {
+  font-size: 18px;
+}
+
+.list-plans {
+  overflow-x: auto;
+}
+
+.list-plans img {
+  border-color: #122a57;
+  border-style: solid;
+}
+
+.info-item-plans {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+footer {
+  background-color: #122a57;
+  height: 70px;
+  display: flex;
+  align-items: center;
+}
+
+footer .footer {
+  justify-content: space-between;
+  color: #f5f5f5;
+}
+
+/* classe para os conteiner flex do site */
+.flex-container {
+  display: flex;
+  max-width: 992px;
+  margin: auto;
+  width: 100%;
+  text-align: justify;
+}
+
+/* Estilo para a sobreposição do formulário */
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+/* Estilo para o formulário */
+#form-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  max-height: 90%;
+  overflow-y: auto; /* Adiciona uma barra de rolagem se necessário */
+}
+
+#form-container label {
+  display: block;
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+#form-container input,
+#form-container select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#form-container button {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#form-container button:hover {
+  background-color: #45a049;
+}
+
+/* Estilo para o título "Viagens" e o botão "Abrir Formulário" */
+.textPlans {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#abrir-formulario {
+  background-color: #122a57;
+  color: #f5f5f5;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-align: center;
+  width: 200px;
+  line-height: 35px;
+  margin-bottom: 1rem;
+}
+
+#abrir-formulario:hover {
+  background-color: #0c192e;
+}
+
+/* Estilo para o botão de fechar o formulário */
+#fechar-formulario {
+  background-color: #d9534f;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+#fechar-formulario:hover {
+  background-color: #c9302c;
+}
+
+.textPlans button .icon {
+  margin-right: 8px; /* Espaço entre o ícone e o texto do botão */
+  font-weight: bold; /* Adicione negrito ao ícone */
+  font-size: 24px; /* Defina o tamanho do ícone */
+  font-family: "Arial", sans-serif; /* Fonte do ícone (substitua pela sua fonte preferida) */
+}
+
+/* área mobile */
+@media (max-width: 992px) {
+  header {
+    width: auto;
+    max-width: auto;
+  }
+
+  .flex-container {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+
+  .pagePresentation {
+    margin-top: 2rem;
+    height: auto;
+  }
+
+  .pagePresentation img {
+    display: none;
+  }
+
+  .btn,
+  .comprar-viagem {
+    margin: auto;
+    margin-top: 10px;
+  }
+
+  .pagePresentation {
+    flex-direction: column-reverse;
+  }
+
+  .pagePresentation .textPresentation {
+    min-height: 200px;
+    width: 100%;
+  }
+
+  #quem-somos {
+    flex-direction: column-reverse;
+    min-width: 200px;
+    margin: auto;
+  }
+
+  #quem-somos img {
+    min-width: 90%;
+  }
+
+  .list-services {
+    display: flex;
+    flex-wrap: nowrap; /* Evita que os itens quebrem para a próxima linha */
+    overflow-x: auto; /* Use 'auto' para ativar a rolagem somente quando necessário */
+    width: 100%;
+  }
+
+  .list-services .item-services {
+    flex: 0 0 auto; /* Impede que os itens tentem crescer além do tamanho natural */
+    margin: 1rem;
+    box-sizing: border-box; /* Garante que a borda não aumente a largura do item */
+  }
+
+  .item-services img {
+    width: 100%; /* Garante que a imagem ocupe 100% da largura do contêiner pai */
+  }
+
+  .list-plans {
+    overflow-x: auto; /* Ative a rolagem horizontal quando necessário */
+    width: 100%;
+  }
+
+  .list-plans .item-plans {
+    max-width: 90%;
+    margin: 1rem;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  /* Adicione esta regra para garantir que a imagem nos planos não ultrapasse a largura do contêiner pai */
+  .list-plans .item-plans img {
+    width: 100%;
+  }
+
+  .item-services img {
+    width: 50%;
+    margin: auto;
+  }
+
+  .list-plans {
+    max-width: 100%;
+    overflow-y: scroll;
+  }
+
+  .list-plans .item-plans {
+    max-width: 90%;
+    margin: 1rem;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .textPlans {
+    flex-direction: column;
+  }
+
+  .textPlans #abrir-formulario {
+    width: 100%px;
+  }
+
+  .textPlans button .icon {
+    font-size: 24px;
+    margin: auto; /* Espaço entre o ícone e o texto */
+  }
+}

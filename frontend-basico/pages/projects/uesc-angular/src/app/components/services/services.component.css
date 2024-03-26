@@ -1,0 +1,20 @@
+/* Estiliza a área de serviços */
+.services {
+    flex: 1 1; /* Flex item cresce, encolhe e tem uma largura máxima de 300px */
+    background-color: #f2f2f2;
+    padding: 10px;
+    height: 200px; /* Defina o valor máximo desejado para a altura */
+}
+
+/* Estiliza as condições meteorológicas */
+.services h3 {
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+    color: #007bff;
+}
+  
+  /* Estiliza a temperatura e a descrição do clima */
+  .services p {
+    font-size: 1em;
+    color: #555;
+}

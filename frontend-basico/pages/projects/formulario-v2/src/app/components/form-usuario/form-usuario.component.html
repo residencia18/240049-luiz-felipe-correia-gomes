@@ -1,0 +1,66 @@
+<form *ngIf="submitPage" [formGroup]="formUsuario" (ngSubmit)="openConfirmationDialog(formUsuario.value)">
+    <mat-form-field>
+        <input matInput formControlName="usuario" placeholder="Nome de usuário">
+        <mat-error *ngIf="formUsuario.get('usuario')?.invalid">Nome de usuário inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput type="password" formControlName="senha" placeholder="Senha">
+        <mat-error *ngIf="formUsuario.get('senha')?.invalid">Senha fraca</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput formControlName="email" placeholder="Email">
+        <mat-error *ngIf="formUsuario.get('email')?.invalid">Email inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field> 
+        <input matInput formControlName="nomeCompleto" placeholder="Nome Completo">
+        <mat-error *ngIf="formUsuario.get('nomeCompleto')?.invalid">Nome  inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput formControlName="telefone" placeholder="Telefone">
+        <mat-error *ngIf="formUsuario.get('telefone')?.invalid">Telefone inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput formControlName="endereco" placeholder="Endereço">
+        <mat-error *ngIf="formUsuario.get('endereco')?.invalid">Endereço inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <input matInput formControlName="dataNascimento" placeholder="Data de Nascimento">
+        <mat-error *ngIf="formUsuario.get('dataNascimento')?.invalid">Data de Nascimento inválida</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Gênero</mat-label>
+        <mat-select formControlName="genero">
+            <mat-option value="masculino">Masculino</mat-option>
+            <mat-option value="feminino">Feminino</mat-option>
+            <mat-option value="outro">Outro</mat-option>
+        </mat-select>
+        <mat-error *ngIf="formUsuario.get('genero')?.invalid">Gênero inválido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Profissão</mat-label>
+        <mat-select formControlName="profissao">
+            <mat-option value="engenheiro">Engenheiro</mat-option>
+            <mat-option value="médico">Médico</mat-option>
+            <mat-option value="professor">Professor</mat-option>
+            <mat-option value="outro">Outro</mat-option>
+        </mat-select>
+        <mat-error *ngIf="formUsuario.get('profissao')?.invalid">Profissão inválida</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Submit</button>
+</form>
+
+<!-- Página de confirmação de cadastro -->
+<div *ngIf="submittedPage" class="submitted-container">
+    <h1 class="submitted-header">Cadastro Confirmado!</h1>
+    <p class="submitted-message">O usuário <strong>{{ formUsuario.get('usuario')?.value }}</strong> foi cadastrado com sucesso.</p>
+    <button mat-raised-button color="primary" class="return-button" (click)="return()">Retornar</button>
+</div>

@@ -1,0 +1,11 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+    margin: 20px;
+    font-family: "Roboto", sans-serif; /* Adiciona uma fonte externa do Google Fonts */
+    display: flex;
+}
+  
+/* Tirar o sublinhado de todos os links da página */
+a {
+    text-decoration: none;
+}
