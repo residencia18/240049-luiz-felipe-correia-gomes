@@ -1,0 +1,10 @@
+<div class="highlights" id="highlights-list">
+    <h2>Destaques</h2>
+
+    <div *ngFor="let newsHighlight of newsList" class="item-highlight">
+        <div>
+            <h3 class="title-highlight">{{ newsHighlight.title }}</h3>
+            <img class="image-highlight" src="{{ newsHighlight.image_url }}" />
+        </div>
+    </div>
+</div>

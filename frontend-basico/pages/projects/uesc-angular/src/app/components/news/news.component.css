@@ -1,0 +1,27 @@
+/* Estiliza a área de notícias */
+.news {
+    flex: 1 1 300px; /* Flex item cresce, encolhe e tem uma largura máxima de 300px */
+    background-color: #f2f2f2;
+    padding: 10px;
+    height: 400px; /* Defina o valor máximo desejado para a altura */
+    overflow: auto; /* Adiciona uma barra de rolagem se necessário */
+  }
+  
+.item-news h3:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+/* Estiliza os títulos das notícias */
+.title-news {
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+    color: #007bff;
+}
+
+/* Estiliza a data de publicação das notícias */
+.pubdate {
+  font-size: 1em;
+  color: #555;
+}
+  

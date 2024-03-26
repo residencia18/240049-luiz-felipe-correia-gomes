@@ -1,0 +1,12 @@
+<div class="news" id ="news-list">
+    <h2>Notícias</h2>
+
+    <div id="news-list">
+        <div *ngFor="let newsItem of newsList" class="item-news">
+          <a href="{{ newsItem.link }}">
+            <h3 class="title-news">{{ newsItem.title }}</h3>
+          </a>
+          <p class="pubdate">{{ newsItem.pubDate }}</p>
+        </div>
+      </div>
+</div>  

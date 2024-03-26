@@ -1,0 +1,29 @@
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.signup-card {
+  width: 300px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+.login {
+  text-decoration: none; /* Remover sublinhado do link */
+  margin-left: 10px; /* Espaçamento à esquerda */
+  /* Adicione mais estilos conforme necessário */
+}
+
+.login:hover {
+  text-decoration: underline; /* Adicionar sublinhado ao passar o mouse sobre o link */
+}

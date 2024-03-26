@@ -1,0 +1,13 @@
+h1 {
+  color: #333;
+}
+
+div {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+input, button {
+  margin-bottom: 10px;
+}
+

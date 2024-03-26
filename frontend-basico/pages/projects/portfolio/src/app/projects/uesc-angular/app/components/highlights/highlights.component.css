@@ -1,0 +1,25 @@
+/* Estiliza a área de destaques */
+.highlights {
+    display: flex;
+    background-color: #f2f2f2;
+    padding: 10px;
+    flex-direction: column;
+    height: 400px; /* Defina o valor máximo desejado para a altura */
+    overflow: auto; /* Adiciona uma barra de rolagem se necessário */
+}
+
+/* Estiliza os destaques */
+.title-highlight {
+    font-size: 1.2em;
+    margin-bottom: 0.5em;
+    color: #007bff;
+  }
+  
+  /* Estiliza as imagens dos destaques */
+.image-highlight {
+    width: 75%;
+    max-height: 150px;
+    object-fit: cover;
+    margin-bottom: 0.5em;
+}
+  

@@ -1,0 +1,12 @@
+  <h2>Category List</h2>
+  <ul class="category-list">
+    <li *ngFor="let category of categoryList"
+    (click)="filterByCategory(category)"
+    appJumpingEffect
+    appHoverStyle
+    [backgroundColor]="'#92C7CF'"
+    [hoverColor]="'#AAD7D9'"
+    >
+      {{ category }}
+    </li>
+  </ul>

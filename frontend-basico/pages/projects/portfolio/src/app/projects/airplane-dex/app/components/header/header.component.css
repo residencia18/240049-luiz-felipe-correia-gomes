@@ -1,0 +1,17 @@
+header {
+  background-color: #92C7CF;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px 10px 0 0;
+}
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 18px;
+  margin-top: 0;
+}

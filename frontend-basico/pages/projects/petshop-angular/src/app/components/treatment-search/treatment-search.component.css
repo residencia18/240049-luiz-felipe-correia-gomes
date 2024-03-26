@@ -1,0 +1,9 @@
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.search-input {
+  flex-grow: 1;
+}

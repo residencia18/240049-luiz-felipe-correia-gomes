@@ -1,0 +1,40 @@
+.mat-elevation-z8 {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.mat-elevation-z8 th, .mat-elevation-z8 td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.mat-elevation-z8 th {
+  background-color: #f5f5f5;
+}
+
+.mat-elevation-z8 td {
+  background-color: #ffffff;
+}
+
+.mat-elevation-z8 button {
+  min-width: auto;
+  min-height: auto;
+}
+
+.edit-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.form-field {
+  flex: 1;
+  margin-right: 10px;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+}

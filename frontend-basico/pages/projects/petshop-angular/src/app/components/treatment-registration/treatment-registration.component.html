@@ -1,0 +1,41 @@
+<h2>Cadastro de Atendimento</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field>
+    <mat-label>Cliente</mat-label>
+    <input matInput formControlName="client" placeholder="Cliente">
+    <mat-error *ngIf="form.get('client')?.invalid">Nome de cliente inválido</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Animal</mat-label>
+    <input matInput formControlName="animal" placeholder="Animal">
+    <mat-error *ngIf="form.get('animal')?.invalid">Nome de animal inválido</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Tipo de Serviço</mat-label>
+    <mat-select formControlName="service" placeholder="Selecione o tipo de serviço">
+      <mat-option value="Banho e tosa">Banho e tosa</mat-option>
+      <mat-option value="Corte de unhas e limpeza de ouvidos">Corte de unhas e limpeza de ouvidos</mat-option>
+      <mat-option value="Consultas veterinárias">Consultas veterinárias</mat-option>
+      <mat-option value="Estética e beleza">Estética e beleza</mat-option>
+      <mat-option value="Hospedagem e creche">Hospedagem e creche</mat-option>
+      <mat-option value="Alimentação e produtos">Alimentação e produtos</mat-option>
+      <mat-option value="Treinamento e adestramento">Treinamento e adestramento</mat-option>
+    </mat-select>
+    <mat-error *ngIf="form.get('service')?.invalid">Selecione o tipo de serviço</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Data</mat-label>
+    <input matInput type="date" formControlName="date" placeholder="Data">
+    <mat-error *ngIf="form.get('date')?.invalid">Data inválida</mat-error>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Observações</mat-label>
+    <textarea matInput formControlName="observations" placeholder="Observações"></textarea>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Cadastrar</button>
+</form>

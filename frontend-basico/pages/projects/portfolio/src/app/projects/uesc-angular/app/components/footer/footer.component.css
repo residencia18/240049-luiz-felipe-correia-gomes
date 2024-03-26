@@ -1,0 +1,11 @@
+/* Estiliza o rodapé da página */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 15px;
+    text-align: center;
+}
