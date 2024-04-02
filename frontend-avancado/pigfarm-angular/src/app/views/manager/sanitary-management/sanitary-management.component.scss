@@ -1,0 +1,92 @@
+.ng-select .ng-select-container {
+  display: block;
+  position: relative;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  color: #495057;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.ng-select .ng-select-container .ng-value-container {
+  display: flex;
+  align-items: center;
+  padding: .375rem .75rem;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-input {
+  position: relative;
+  flex-grow: 1;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-placeholder {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-value {
+  display: flex;
+  align-items: center;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: .25rem;
+  margin-right: .5rem;
+  padding: .25rem .5rem;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-value .ng-value-label {
+  margin-right: .5rem;
+}
+
+.ng-select .ng-select-container .ng-value-container .ng-value .ng-value-icon {
+  cursor: pointer;
+}
+
+.ng-select .ng-select-container .ng-clear-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.ng-select .ng-select-container .ng-arrow-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.ng-select .ng-dropdown-panel {
+  position: absolute;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+  z-index: 1;
+}
+
+.ng-select .ng-dropdown-panel .ng-dropdown-panel-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+  display: flex;
+  align-items: center;
+  padding: .375rem .75rem;
+  cursor: pointer;
+}
+
+.ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.selected {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.highlighted {
+  background-color: #f8f9fa;
+}

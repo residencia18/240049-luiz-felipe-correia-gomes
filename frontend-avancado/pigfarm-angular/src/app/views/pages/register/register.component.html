@@ -1,0 +1,89 @@
+<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col lg="7" md="9" xl="6">
+        <c-card class="mx-4">
+          <c-card-body class="p-4">
+            <form (ngSubmit)="signup()" [formGroup]="formSignup" cForm novalidate>
+              <h1>Register</h1>
+              <p class="text-medium-emphasis">Create your account</p>
+
+
+              <c-row class="mb-1">
+                <label [sm]="4" cCol cLabel="col" for="email">Email</label>
+                <c-col *ngIf="formSignup.controls['email'] as ctrl" [sm]="8">
+                  <input [valid]="
+                      ctrl.touched && ctrl.valid
+                        ? true
+                        : (submitted || ctrl.touched) && ctrl.invalid
+                        ? false
+                        : undefined
+                    " autocomplete="off" cFormControl formControlName="email" id="email" placeholder="Email" required
+                    type="email" />
+                  <c-form-feedback *ngIf="submitted || ctrl.invalid" [valid]="!(submitted || ctrl.invalid)">
+                    <ng-container *ngIf="ctrl.errors as errors">
+                      <div *ngIf="errors['required']">Email is required</div>
+                      <div *ngIf="errors['email']">
+                        {{ formErrors.email?.email }}
+                      </div>
+                    </ng-container>
+                  </c-form-feedback>
+                </c-col>
+              </c-row>
+              <c-row class="mb-1">
+                <label [sm]="4" cCol cLabel="col" for="password">Password</label>
+                <c-col *ngIf="formSignup.controls['password'] as ctrl" [sm]="8">
+                  <input [valid]="
+                      ctrl.touched && ctrl.valid
+                        ? true
+                        : (submitted || ctrl.touched) && ctrl.invalid
+                        ? false
+                        : undefined
+                    " autocomplete="new-password" cFormControl formControlName="password" id="password"
+                    placeholder="Password" required type="password" />
+                  <c-form-feedback *ngIf="submitted || ctrl.invalid" [valid]="!(submitted || ctrl.invalid)">
+                    <ng-container *ngIf="ctrl.errors as errors">
+                      <div *ngIf="errors['required']">Password is required</div>
+                      <div *ngIf="errors['minlength']">
+                        {{ formErrors['password'].minLength }}
+                      </div>
+                      <div *ngIf="errors['pattern']">
+                        {{ formErrors['password'].pattern }}
+                      </div>
+                    </ng-container>
+                  </c-form-feedback>
+                </c-col>
+              </c-row>
+              <c-row class="mb-1">
+                <label [sm]="4" cCol cLabel="col" for="confirmPassword">Confirm password</label>
+                <c-col *ngIf="formSignup.controls['confirmPassword'] as ctrl" [sm]="8">
+                  <input [valid]="
+                      ctrl.touched && ctrl.valid
+                        ? true
+                        : (submitted || ctrl.touched) && ctrl.invalid
+                        ? false
+                        : undefined
+                    " autocomplete="off" cFormControl formControlName="confirmPassword" id="confirmPassword"
+                    placeholder="Confirm password" required type="password" />
+                  <c-form-feedback *ngIf="submitted || ctrl.invalid" [valid]="!(submitted || ctrl.invalid)">
+                    <ng-container *ngIf="ctrl.errors as errors">
+                      <div *ngIf="errors['passwordMismatch']">
+                        {{ formErrors['confirmPassword'].passwordMismatch }}
+                      </div>
+                      <div *ngIf="errors['required']">Confirmation is required</div>
+                    </ng-container>
+                  </c-form-feedback>
+                </c-col>
+              </c-row>
+              <c-col xs="6">
+                <button type="submit" cButton class="px-4 mt-4" color="primary">
+                  Register
+                </button>
+              </c-col>
+            </form>
+          </c-card-body>
+        </c-card>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>

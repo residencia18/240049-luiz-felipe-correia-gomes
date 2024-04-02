@@ -1,0 +1,92 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.github
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+.hintrc
+.editorconfig
+
+# Miscellaneous
+/.angular/cache
+.sass-cache/
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+/typings
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Firebase
+/public
+.firebaserc
+.firebase
+*-debug.log
+.runtimeconfig.json
+environments
+
+# Arquivos específicos do Firebase
+firebase.json
+firestore.rules
+storage.rules
+
+# Arquivos e pastas específicos do Angular
+/node_modules
+/dist
+/.vscode
+/.idea
+*.log
+*.iml
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.har
+*.iws
+*.ipr
+*.iws
+*.ai
+*.top
+*.mobirise
+*.jst
+*.tmp
+*.tmp.ts
+*.tmp.js
+*.tmp.js.map
+*.sublime-workspace
+*.suo
+*.sln
+*.sw?
+
+# Outros arquivos e pastas que devem ser ignorados
+.DS_Store
+Thumbs.db
+.idea/

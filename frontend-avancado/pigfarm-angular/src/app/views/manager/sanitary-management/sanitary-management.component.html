@@ -1,0 +1,306 @@
+<c-row class="g-3">
+  <c-col cLabel [sm]="12" [md]="6" [lg]="4">
+    <label cLabel for="pigFilter">Filter by Pig:</label>
+    <input class="form-control" type="text" id="pigFilter" [(ngModel)]="pigFilter" (input)="applyFilters()">
+  </c-col>
+  <c-col cLabel [sm]="12" [md]="6" [lg]="4">
+    <label cLabel for="activityFilter">Filter by Activity:</label>
+    <input class="form-control" type="text" id="activityFilter" [(ngModel)]="activityFilter" (input)="applyFilters()">
+  </c-col>
+  <c-col [sm]="12" [md]="6" [lg]="4">
+    <label cLabel for="dateFilter">Filter by Date:</label>
+    <input class="form-control" type="date" id="dateFilter" [(ngModel)]="dateFilter" (input)="applyFilters()">
+  </c-col>
+</c-row>
+
+<c-row class="mt-4">
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>
+        Sanitary Management
+        <button cButton color="primary" class="float-end" size="sm" (click)="addActivityMode()">Add Sanitary
+          Activity</button>
+      </c-card-header>
+      <c-card-body>
+
+        <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border">
+
+          <thead cTableColor="light">
+            <tr>
+              <th class="text-center">Date</th>
+              <th class="text-center">Activity</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="loading">
+            <tr>
+              <td colspan="6" class="text-center">
+                <div class="m-2">
+                  <c-spinner label="Loading..."></c-spinner>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+
+          <!-- No activities found -->
+          <tbody *ngIf="!loading && filteredActivities.length == 0 ">
+            <tr>
+              <td></td>
+              <td class="text-center">
+                <div class="m-2">
+                  <svg cIcon name="cilSad"></svg>
+                  <span class="text-medium-emphasis">
+                    Nothing to see here
+                  </span>
+                </div>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+
+          <tbody *ngIf="!loading">
+
+            <tr *ngFor="let activity of filteredActivities">
+
+              <td class="text-center">{{ activity.date | formatDate }}</td>
+
+              <td class="text-center">{{ activity.activity }}</td>
+
+              <td class="text-center">
+                <c-dropdown variant="btn-group" direction="center">
+                  <button cButton cDropdownToggle color="secondary" size="sm">
+                    <svg cIcon name="cil-settings"></svg>
+                  </button>
+                  <ul cDropdownMenu>
+                    <li><button cDropdownItem (click)="viewActivityMode(activity)">View</button></li>
+                    <li><button cDropdownItem (click)="editActivityMode(activity)">Edit</button></li>
+                    <li><button cDropdownItem (click)="deleteActivityMode(activity)">Delete</button></li>
+                  </ul>
+                </c-dropdown>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+
+<c-modal [visible]="addActivityModal" (visibleChange)="handleAddMode($event)">
+  <c-modal-header>
+    <h5 class="modal-title">Add Sanitary Activity</h5>
+    <button (click)="toggleAddActivity()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <form [formGroup]="formAddActivity">
+      <c-row class="mb-1">
+        <label [sm]="4" cCol cLabel="col" for="date">Date</label>
+        <c-col *ngIf="formAddActivity.controls['date'] as ctrl" [sm]="8">
+          <input [valid]="
+                ctrl.touched && ctrl.valid
+                  ? true
+                  : (addActivitySubmit || ctrl.touched) && ctrl.invalid
+                  ? false
+                  : undefined
+              " autocomplete="off" cFormControl formControlName="date" id="date" placeholder="Activity Date" required
+            type="date" />
+          <c-form-feedback *ngIf="addActivitySubmit || ctrl.invalid" [valid]="!(addActivitySubmit || ctrl.invalid)">
+            <ng-container *ngIf="ctrl.errors as errors">
+              <div *ngIf="errors['required']">Activity date is required</div>
+              <div *ngIf="errors['pattern']">
+                {{ formErrors['date'].pattern }}
+              </div>
+            </ng-container>
+          </c-form-feedback>
+        </c-col>
+      </c-row>
+
+      <c-row class="mb-1">
+        <label [sm]="4" cCol cLabel="col" for="activity">Activity</label>
+        <c-col *ngIf="formAddActivity.controls['activity'] as ctrl" [sm]="8">
+          <select [valid]="
+          ctrl.touched && ctrl.valid
+          ? true
+          : (addActivitySubmit || ctrl.touched) && ctrl.invalid
+          ? false
+          : undefined
+      " autocomplete="off" cSelect formControlName="activity" id="activity" required type="text"
+            (ngModelChange)="onAddActivityChange($event)">
+            <option value="" disabled>Select the sanitary activity</option>
+            <option value="Vaccination">Vaccination</option>
+            <option value="Deworming">Deworming</option>
+            <option value="Bathing">Bathing</option>
+            <option value="Other">Other</option>
+          </select>
+          <input *ngIf="formAddActivity.controls['activity'].value === 'Other'" cFormControl type="text"
+            id="otherActivityAdd" formControlName="otherActivity" placeholder="Specify other activity" />
+
+          <c-form-feedback *ngIf="addActivitySubmit || ctrl.invalid" [valid]="!(addActivitySubmit || ctrl.invalid)">
+            <ng-container *ngIf="ctrl.errors as errors">
+              <div *ngIf="errors['required']">Activity is required</div>
+            </ng-container>
+          </c-form-feedback>
+        </c-col>
+      </c-row>
+
+      <c-row class="mb-1">
+        <label cLabel="col" cCol [sm]="4" for="description">Description</label>
+        <c-col *ngIf="formAddActivity.controls['description'] as ctrl" [sm]="8">
+          <textarea autocomplete="off" cFormControl formControlName="description" id="description"
+            placeholder="Description" maxlength="256"></textarea>
+          <small class="text-muted">Maximum 256 characters</small>
+        </c-col>
+      </c-row>
+
+      <c-row class="mb-1">
+        <label [sm]="4" cCol cLabel="col" for="pigs">Pigs</label>
+        <c-col *ngIf="formAddActivity.controls['pigs'] as ctrl" [sm]="8">
+          <ng-select formControlName="pigs" [items]="pigsData" bindLabel="identifier" [multiple]="true"
+            [closeOnSelect]="false" [searchable]="true">
+          </ng-select>
+        </c-col>
+      </c-row>
+
+    </form>
+  </c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="cancelAddActivity()">Cancel</button>
+    <button cButton color="primary" (click)="confirmAdd()">Save</button>
+  </c-modal-footer>
+</c-modal>
+
+<c-modal [visible]="editActivityModal" (visibleChange)="handleEditMode($event)">
+  <c-modal-header>
+    <h5 class="modal-title">Edit Sanitary Activity</h5>
+    <button (click)="toggleEditActivity()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+
+    <form [formGroup]="formEditActivity">
+      <c-row class="mb-1">
+        <label [sm]="4" cCol cLabel="col" for="date">Date</label>
+        <c-col *ngIf="formEditActivity.controls['date'] as ctrl" [sm]="8">
+          <input [valid]="
+                ctrl.touched && ctrl.valid
+                  ? true
+                  : (editActivitySubmit || ctrl.touched) && ctrl.invalid
+                  ? false
+                  : undefined
+              " autocomplete="off" cFormControl formControlName="date" id="date" placeholder="Activity Date" required
+            type="date" />
+          <c-form-feedback *ngIf="editActivitySubmit || ctrl.invalid" [valid]="!(editActivitySubmit || ctrl.invalid)">
+            <ng-container *ngIf="ctrl.errors as errors">
+              <div *ngIf="errors['required']">Activity date is required</div>
+              <div *ngIf="errors['pattern']">
+                {{ formErrors['date'].pattern }}
+              </div>
+            </ng-container>
+          </c-form-feedback>
+        </c-col>
+      </c-row>
+
+      <c-row class="mb-1">
+        <label [sm]="4" cCol cLabel="col" for="activity">Activity</label>
+        <c-col *ngIf="formEditActivity.controls['activity'] as ctrl" [sm]="8">
+          <select [valid]="
+          ctrl.touched && ctrl.valid
+          ? true
+          : (editActivitySubmit || ctrl.touched) && ctrl.invalid
+          ? false
+          : undefined
+      " autocomplete="off" cSelect formControlName="activity" id="activity" required type="text"
+            (ngModelChange)="onEditActivityChange($event)">
+            <option value="" disabled>Select the sanitary activity</option>
+            <option value="Vaccination">Vaccination</option>
+            <option value="Deworming">Deworming</option>
+            <option value="Bathing">Bathing</option>
+            <option value="Other">Other</option>
+          </select>
+          <input *ngIf="formEditActivity.controls['activity'].value === 'Other'" cFormControl type="text"
+            id="otherActivityEdit" formControlName="otherActivity" placeholder="Specify other activity" />
+
+          <c-form-feedback *ngIf="editActivitySubmit || ctrl.invalid" [valid]="!(editActivitySubmit || ctrl.invalid)">
+            <ng-container *ngIf="ctrl.errors as errors">
+              <div *ngIf="errors['required']">Activity is required</div>
+            </ng-container>
+          </c-form-feedback>
+        </c-col>
+      </c-row>
+
+      <c-row class="mb-1">
+        <label cLabel="col" cCol [sm]="4" for="description">Description</label>
+        <c-col *ngIf="formEditActivity.controls['description'] as ctrl" [sm]="8">
+          <textarea autocomplete="off" cFormControl formControlName="description" id="description"
+            placeholder="Description" maxlength="256"></textarea>
+          <small class="text-muted">Maximum 256 characters</small>
+        </c-col>
+      </c-row>
+
+      <c-row class="mb-1">
+        <label [sm]="4" cCol cLabel="col" for="pigs">Pigs</label>
+        <c-col *ngIf="formEditActivity.controls['pigs'] as ctrl" [sm]="8">
+          <ng-select formControlName="pigs" [items]="pigsData" bindLabel="identifier" [multiple]="true"
+            [closeOnSelect]="false" [searchable]="true">
+          </ng-select>
+        </c-col>
+      </c-row>
+
+    </form>
+
+  </c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="cancelEditActivity()">Cancel</button>
+    <button cButton color="primary" (click)="confirmEdit()">Edit</button>
+  </c-modal-footer>
+</c-modal>
+
+<c-modal [visible]="viewActivityModal" (visibleChange)="handleViewMode($event)">
+  <c-modal-header>
+    <h5 class="modal-title">Sanitary Activity</h5>
+    <button (click)="toggleViewActivity()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <table class="table table-bordered">
+      <tbody>
+        <tr>
+          <td class="text-center">Date</td>
+          <td class="text-center">{{ viewActivityData.date | formatDate }}</td>
+        </tr>
+        <tr>
+          <td class="text-center">Activity</td>
+          <td class="text-center">{{ viewActivityData.activity }}</td>
+        </tr>
+        <tr>
+          <td class="text-center">Description</td>
+          <td class="text-center">{{ viewActivityData.description }}</td>
+        </tr>
+        <tr>
+          <td class="text-center">Pigs</td>
+          <td class="text-center">
+            <span *ngFor="let pig of viewActivityData.pigs; let i = index">
+              {{ pig.identifier }}{{i < viewActivityData.pigs.length - 1 ? ', ' : '' }} </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="cancelViewActivity()">Close</button>
+  </c-modal-footer>
+</c-modal>
+
+<c-modal [visible]="deleteActivityModal" (visibleChange)="handleDeleteMode($event)">
+  <c-modal-header>
+    <h5 class="modal-title">Delete Sanitary Activity</h5>
+    <button (click)="toggleDeleteActivity()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>
+    <p>Are you sure you want to delete this activity?</p>
+  </c-modal-body>
+  <c-modal-footer>
+    <button cButton color="secondary" (click)="cancelDeleteActivity()">Cancel</button>
+    <button cButton color="primary" (click)="confirmDelete()">Delete</button>
+  </c-modal-footer>
+</c-modal>
