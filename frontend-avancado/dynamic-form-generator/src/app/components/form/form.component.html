@@ -1,0 +1,10 @@
+<div class="form-container">
+  <h2>Country Details Form</h2>
+  <form>
+    <div class="form-field" *ngFor="let field of formFields">
+      <label>{{ field.label }}</label>
+      <input type="{{ field.type }}" [(ngModel)]="formData[field.name]" name="{{ field.name }}" />
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+</div>

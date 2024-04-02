@@ -1,0 +1,62 @@
+<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col md="8">
+        <c-card-group>
+          <c-card class="p-4">
+            <c-card-body>
+              <form (ngSubmit)="login()" [formGroup]="formLogin">
+                <h1>Login</h1>
+                <p class="text-medium-emphasis">Sign In to your account</p>
+                <c-input-group class="mb-3">
+                  <span cInputGroupText>
+                    <svg cIcon name="cilUser"></svg>
+                  </span>
+                  <input cFormControl formControlName="email" autoComplete="email" id="email" placeholder="Email"
+                    (input)="clearErrorMessage()" />
+                </c-input-group>
+                <c-input-group class="mb-0">
+                  <span cInputGroupText>
+                    <svg cIcon name="cilLockLocked"></svg>
+                  </span>
+                  <input cFormControl formControlName="password" autoComplete="current-password" id="password"
+                    placeholder="Password" type="password" (input)="clearErrorMessage()" />
+                </c-input-group>
+
+                <div class="error mt-2" *ngIf="getErrorMessage() || errorMessage" [@fadeInOut]>
+                  <div> Invalid credentials.</div>
+                </div>
+                <c-row>
+                  <c-col class="text-right" xs="10">
+                    <button cButton class="px-0" color="link">
+                      Forgot password?
+                    </button>
+                  </c-col>
+                  <c-col xs="6">
+                    <button type="submit" cButton class="px-4 mt-0" color="primary">
+                      Login
+                    </button>
+                  </c-col>
+                </c-row>
+              </form>
+            </c-card-body>
+          </c-card>
+          <c-card [ngStyle]="{'width.%': 44}" class="text-white bg-primary py-5">
+            <c-card-body class="text-center">
+              <div>
+                <h2>Sign up</h2>
+                <p>
+                  Do you not have an account on the best swine management system yet? Register now and explore our
+                  services!
+                </p>
+                <button [active]="true" cButton class="mt-3" color="primary" routerLink="/register">
+                  Register Now!
+                </button>
+              </div>
+            </c-card-body>
+          </c-card>
+        </c-card-group>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>
