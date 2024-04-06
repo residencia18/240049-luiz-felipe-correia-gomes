@@ -125,6 +125,12 @@ export class ListPigsComponent implements OnInit {
     });
   }
 
+  pigHistoryMode(pig: IPig): void {
+    this.router.navigate(['/manager/pig-history'], {
+      queryParams: { pigRef: pig.key },
+    });
+  }
+
   toggleDeleteMode(): void {
     this.modalDelete = !this.modalDelete;
   }

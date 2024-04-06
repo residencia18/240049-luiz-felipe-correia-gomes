@@ -1,0 +1,75 @@
+<c-row class="mt-4">
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>
+        Selected Pig
+      </c-card-header>
+      <c-card-body>
+
+        <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border">
+
+          <thead cTableColor="light">
+            <tr>
+              <th class="text-center">
+                <svg cIcon name="cilAnimal"></svg>
+              </th>
+              <th class="text-center">Identifier</th>
+              <th class="text-center">Age</th>
+              <th class="text-center">Parents</th>
+              <th class="text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr>
+              <td class="text-center">
+                <c-avatar size="md" src="{{ avatar }}"></c-avatar>
+                <div class="small text-medium-emphasis text-nowrap">
+                  <span>
+                    {{ pigSelected.gender }}
+                  </span>
+                </div>
+              </td>
+
+              <td class="text-center">
+                <div>{{ pigSelected.identifier }}</div>
+              </td>
+
+              <td class="text-center">
+                <div>
+                  Birth: {{ pigSelected.date_birth | formatDate }}
+                </div>
+                <div class="small text-medium-emphasis text-nowrap">
+                  <span>
+                    {{ pigSelected.date_birth | calculateAge }}
+                  </span>
+                </div>
+              </td>
+
+
+              <td class="text-center">
+                <div class="small text-nowrap">
+                  Father ID: {{ pigSelected.father_id }}
+                </div>
+                <div class="small text-nowrap">
+                  Mother ID: {{ pigSelected.mother_id }}
+                </div>
+              </td>
+
+              <td class="text-center">
+                <div>{{ pigSelected.status }}</div>
+                <div class="small text-medium-emphasis text-nowrap">
+                  <span>
+                    Exit: {{ pigSelected.date_exit | formatDate }}
+                  </span>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

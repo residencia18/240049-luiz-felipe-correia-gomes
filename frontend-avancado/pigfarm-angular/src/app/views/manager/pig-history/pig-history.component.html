@@ -1,0 +1,80 @@
+<pig-table [pigRef]="pigRef"></pig-table>
+
+
+<c-row class="g-3">
+  <c-col [sm]="12" [md]="6" [lg]="4">
+    <label cLabel for="dateFilter">Filter by Date:</label>
+    <input class="form-control" type="date" id="dateFilter" [(ngModel)]="dateFilter" (input)="applyFilters()">
+  </c-col>
+  <c-col cLabel [sm]="12" [md]="6" [lg]="4">
+    <label cLabel for="activityFilter">Filter by Activity:</label>
+    <input class="form-control" type="text" id="activityFilter" [(ngModel)]="activityFilter" (input)="applyFilters()">
+  </c-col>
+  <c-col cLabel [sm]="12" [md]="6" [lg]="4">
+    <label cLabel for="weightFilter">Filter by Weight:</label>
+    <input class="form-control" type="text" id="weightFilter" [(ngModel)]="weightFilter" (input)="applyFilters()">
+  </c-col>
+</c-row>
+
+<c-row class="mt-4">
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>
+        Pig History
+        <button cButton color="primary" class="float-end" size="sm" (click)="showChart()">See Dashboard</button>
+      </c-card-header>
+      <c-card-body>
+
+        <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border">
+
+          <thead cTableColor="light">
+            <tr>
+              <th class="text-center">Date</th>
+              <th class="text-center">Activity</th>
+              <th class="text-center">Weight</th>
+            </tr>
+          </thead>
+
+          <tbody *ngIf="loading">
+            <tr>
+              <td colspan="6" class="text-center">
+                <div class="m-2">
+                  <c-spinner label="Loading..."></c-spinner>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+
+          <!-- No activities found -->
+          <tbody *ngIf="!loading && filteredActivities.length === 0">
+            <tr>
+              <td></td>
+              <td class="text-center">
+                <div class="m-2">
+                  <svg cIcon name="cilSad"></svg>
+                  <span class="text-medium-emphasis">
+                    Nothing to see here
+                  </span>
+                </div>
+              </td>
+              <td></td>
+            </tr>
+          </tbody>
+
+          <tbody *ngIf="!loading">
+
+            <tr *ngFor="let activity of filteredActivities">
+
+              <td class="text-center">{{ activity.date | formatDate }}</td>
+
+              <td class="text-center">{{ activity.activity }}</td>
+
+              <td class="text-center">{{ activity.weight }}</td>
+
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
