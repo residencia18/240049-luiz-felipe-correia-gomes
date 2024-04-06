@@ -1,20 +1,17 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IPig } from '../../../model/pig/pig.interface';
+import { IWeight } from '../../../model/activity/weight.interface';
 import { PigRestService } from 'src/app/services/rest/pig-rest.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ValidationFormsService } from 'src/app/services/validation/validation-forms.service';
-
-export interface IWeight {
-  weight: string;
-  date: string;
-}
 
 @Component({
   selector: 'app-weight-control',
   templateUrl: './weight-control.component.html',
   styleUrls: ['./weight-control.component.scss'],
 })
+
 export class WeightControlComponent implements OnInit {
   wh!: IWeight;
   pigSelected!: IPig;

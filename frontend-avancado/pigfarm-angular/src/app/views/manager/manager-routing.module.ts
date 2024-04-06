@@ -5,6 +5,7 @@ import { EditPigComponent } from './edit-pig/edit-pig.component';
 import { WeightControlComponent } from './weight-control/weight-control.component';
 import { queryParamGuard } from 'src/app/guards/query-param.guard';
 import { SanitaryManagementComponent } from './sanitary-management/sanitary-management.component';
+import { PigHistoryComponent } from './pig-history/pig-history.component';
 
 const routes: Routes = [
   {
@@ -45,6 +46,13 @@ const routes: Routes = [
         component: SanitaryManagementComponent,
         data: {
           title: 'Sanitary Management',
+        },
+      },
+      {
+        path: 'pig-history',
+        component: PigHistoryComponent,
+        data: {
+          title: 'Pig History',
         },
       }
     ]

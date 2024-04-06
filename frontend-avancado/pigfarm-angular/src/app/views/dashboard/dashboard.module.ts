@@ -7,6 +7,7 @@ import {
   ButtonGroupModule,
   ButtonModule,
   CardModule,
+  CarouselModule,
   FormModule,
   GridModule,
   NavModule,
@@ -19,13 +20,18 @@ import { IconModule } from '@coreui/icons-angular';
 import { ChartjsModule } from '@coreui/angular-chartjs';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
-import { DashboardComponent } from './dashboard.component';
+import { WeightChartComponent } from './weight-chart/weight-chart.component';
+import { ActivityChartComponent } from './activity-chart/activity-chart.component';
+import { PigTableModule } from 'src/app/shared/pig-table/pig-table.module';
+
 import { UtilsPipesModule } from 'src/app/shared/utils-pipes/utils-pipes.module';
 import { FormatDatePipe } from 'src/app/services/pipes/format-date.pipe';
+import { DashboardComponent } from './dashboard.component';
 
 @NgModule({
   imports: [
     DashboardRoutingModule,
+    CarouselModule,
     CardModule,
     NavModule,
     IconModule,
@@ -43,8 +49,13 @@ import { FormatDatePipe } from 'src/app/services/pipes/format-date.pipe';
     TableModule,
     SpinnerModule,
     UtilsPipesModule,
+    PigTableModule,
   ],
-  declarations: [DashboardComponent],
+  declarations: [
+    DashboardComponent,
+    WeightChartComponent,
+    ActivityChartComponent,
+  ],
   providers: [FormatDatePipe],
 })
 export class DashboardModule {

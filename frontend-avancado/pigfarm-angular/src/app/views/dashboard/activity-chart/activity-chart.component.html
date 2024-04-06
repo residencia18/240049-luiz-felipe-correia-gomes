@@ -1,0 +1,26 @@
+<c-row>
+  <c-col xs>
+    <c-card class="mb-4">
+      <c-card-header>
+        <button cButton color="primary" class="float-end" size="sm" (click)="activityHistory()">Pig History</button>
+      </c-card-header>
+
+      <c-card-body *ngIf="!loading && existsHistory">
+        <c-chart [data]="data" type="bar" [options]="chartSetup">
+        </c-chart>
+      </c-card-body>
+
+      <c-card-body *ngIf="loading" class="text-center">
+        <c-spinner label="Loading..."></c-spinner>
+      </c-card-body>
+
+      <c-card-body *ngIf="!existsHistory" class="text-center">
+        <svg cIcon name="cilSad"></svg>
+        <span class="text-medium-emphasis">
+          Nothing to see here
+        </span>
+      </c-card-body>
+
+    </c-card>
+  </c-col>
+</c-row>
