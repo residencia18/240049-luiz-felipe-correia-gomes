@@ -22,7 +22,7 @@ public class WishlistServicePaginable {
     @Autowired
     private WishlistRepository wishlistRepository;
 
-    @Cacheable(value = "wishlists", key = "#page + #size + #sort")
+    @Cacheable(value = "wishlists", key = "#page.toString() + #size.toString() + T(java.util.Arrays).toString(#sort)")
     public Iterable<Wishlist> getWithPagination(int page, int size, String[] sort) {
         log.info("Getting all wishlists with pagination, page {} and size {}", page, size);
 

@@ -22,7 +22,7 @@ public class CategoryServicePaginable extends CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
     
-    @Cacheable(value = "categories", key = "#page + #size + #sort")
+    @Cacheable(value = "categories", key = "#page.toString() + #size.toString() + T(java.util.Arrays).toString(#sort)")
     public Iterable<Category> getWithPagination(int page, int size, String[] sort) {
         log.info("Getting all categories with pagination, page {}, size {} and sort {}", page, size, sort);
 

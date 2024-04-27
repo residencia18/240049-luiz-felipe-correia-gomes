@@ -22,7 +22,7 @@ public class ProductServicePaginable extends ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Cacheable(value = "products", key = "#page + #size + #sort")
+    @Cacheable(value = "products", key = "#page.toString() + #size.toString() + T(java.util.Arrays).toString(#sort)")
     public Iterable<Product> getWithPagination(int page, int size, String[] sort) {
         log.info("Getting all products with pagination, page {} and size {}", page, size);
 

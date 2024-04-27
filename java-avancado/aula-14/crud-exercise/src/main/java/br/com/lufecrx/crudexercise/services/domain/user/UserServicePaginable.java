@@ -22,7 +22,7 @@ public class UserServicePaginable {
     @Autowired
     private UserRepository userRepository;
     
-    @Cacheable(value = "users", key = "#page + #size + #sort")
+    @Cacheable(value = "users", key = "#page.toString() + #size.toString() + T(java.util.Arrays).toString(#sort)")
     public Iterable<User> getWithPagination (int page, int size, String[] sort) {
         log.info("Getting all users with pagination, page {} and size {}", page, size);
 
