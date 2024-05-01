@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,15 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lufecrx.crudexercise.model.Product;
 import br.com.lufecrx.crudexercise.services.domain.product.ProductService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/products")
 public class ProductController {
+    
+    private final ProductService productService;
 
-    @Qualifier("standard")
-    private ProductService productService;
+    @Autowired
+    public ProductController(@Qualifier("standard") ProductService productService) {
+        this.productService = productService;
+    }
 
     private final ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
 

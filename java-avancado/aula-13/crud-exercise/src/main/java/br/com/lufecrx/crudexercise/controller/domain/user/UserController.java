@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,15 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lufecrx.crudexercise.model.User;
 import br.com.lufecrx.crudexercise.services.domain.user.UserService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/users")
 public class UserController {
 
-    @Qualifier("standard")
-    private UserService userService;
+    private final UserService userService;
+
+    @Autowired
+    public UserController(@Qualifier("standard") UserService userService) {
+        this.userService = userService;
+    }
 
     private final ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
     

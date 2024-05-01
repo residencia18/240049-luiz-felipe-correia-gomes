@@ -1,5 +1,6 @@
 package br.com.lufecrx.crudexercise.controller.domain.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,15 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lufecrx.crudexercise.model.User;
 import br.com.lufecrx.crudexercise.services.domain.user.UserServicePaginable;
-import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/paginable/users")
-public class UserControllerPaginable extends UserController {
+public class UserControllerPaginable {
     
-    @Qualifier("paginable")
     private UserServicePaginable userService;
+
+    @Autowired
+    public UserControllerPaginable(@Qualifier("paginable") UserServicePaginable userService) {
+        this.userService = userService;
+    }
     
     @GetMapping("/page/{page}/size/5")
     public ResponseEntity<Iterable<User>> findAllWithPaginationAndSizeFive(@PathVariable int page) {
