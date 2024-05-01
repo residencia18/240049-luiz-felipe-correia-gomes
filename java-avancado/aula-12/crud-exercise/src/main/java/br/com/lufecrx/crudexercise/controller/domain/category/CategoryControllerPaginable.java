@@ -1,5 +1,6 @@
 package br.com.lufecrx.crudexercise.controller.domain.category;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,15 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lufecrx.crudexercise.model.Category;
 import br.com.lufecrx.crudexercise.services.domain.category.CategoryServicePaginable;
-import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/paginable/categories")
-public class CategoryControllerPaginable extends CategoryController {
+public class CategoryControllerPaginable {
 
-    @Qualifier("paginable")
     private CategoryServicePaginable categoryService;
+
+    @Autowired
+    public CategoryControllerPaginable(@Qualifier("paginable") CategoryServicePaginable categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping("/page/{page}/size/5")
     public ResponseEntity<Iterable<Category>> findAllWithPaginationAndSizeFive(@PathVariable int page) {

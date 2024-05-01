@@ -1,5 +1,6 @@
 package br.com.lufecrx.crudexercise.controller.domain.product;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,15 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lufecrx.crudexercise.model.Product;
 import br.com.lufecrx.crudexercise.services.domain.product.ProductServicePaginable;
-import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/paginable/products")
-public class ProductControllerPaginable extends ProductController {
+public class ProductControllerPaginable {
 
-    @Qualifier("paginable")
     private ProductServicePaginable productService;
+
+    @Autowired
+    public ProductControllerPaginable(@Qualifier("paginable") ProductServicePaginable productService) {
+        this.productService = productService;
+    }
 
     @GetMapping
     public ResponseEntity<Iterable<Product>> findAll(
