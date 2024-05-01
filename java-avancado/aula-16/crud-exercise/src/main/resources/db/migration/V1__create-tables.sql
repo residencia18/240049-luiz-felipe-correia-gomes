@@ -1,14 +1,6 @@
 -- This file contains the SQL script to create the tables in the database
 -- The tables are created in the order of their dependencies
 
-CREATE TABLE users (
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    birth_date DATE NOT NULL,
-    mobile_phone VARCHAR(11) NOT NULL
-);
-
 -- We need to create the categories table before creating the product_categories table
 CREATE TABLE categories (
     id BIGSERIAL PRIMARY KEY,
