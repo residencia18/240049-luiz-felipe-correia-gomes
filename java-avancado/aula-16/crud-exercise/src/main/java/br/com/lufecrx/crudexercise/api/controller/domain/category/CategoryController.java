@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,15 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lufecrx.crudexercise.api.model.Category;
 import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/categories")
 public class CategoryController {
 
-    @Qualifier("standard")
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    @Autowired
+    public CategoryController(@Qualifier("standard") CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
+
 
     private final ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
 

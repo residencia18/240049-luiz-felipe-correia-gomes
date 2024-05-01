@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,15 +19,17 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
 import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/wishlist")
 public class WishlistController {
     
-    @Qualifier("standard")
-    private WishlistService wishlistService;
+    private final WishlistService wishlistService;
+
+    @Autowired
+    public WishlistController(@Qualifier("standard") WishlistService wishlistService) {
+        this.wishlistService = wishlistService;
+    }
 
     private final ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
 
