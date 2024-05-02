@@ -2,9 +2,15 @@ package br.com.lufecrx.crudexercise.auth.infra.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -14,9 +20,46 @@ public class SecurityConfigurations {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                // .cors(Customizer.withD/efaults()) // Cross-Origin Resource Sharing (CORS) is a security concept that allows restricting the resources implemented in web browsers.
-                .csrf(crsf -> crsf.disable()) // CSRF (Cross-Site Request Forgery) is an attack that forces an end user to execute unwanted actions on a web application in which they're currently authenticated.
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Session management is a process by which a server maintains the state of an entity interacting with it.
+                // Enable CORS with default configuration
+                .cors(Customizer.withDefaults()) 
+                // Disable CSRF protection as our service is stateless and doesn't use cookies
+                .csrf(crsf -> crsf.disable())
+                // Make the session stateless, as we are using JWTs for authentication
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        // Allow access to the Swagger UI for all users
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        // Allow POST requests to /auth/signup for all users
+                        .requestMatchers(HttpMethod.POST, "/auth/signup").permitAll()   
+                        // Allow POST requests to /auth/login for all users
+                        .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        // Allow GET requests to /categories/** and /products/** for all users
+                        .requestMatchers(HttpMethod.GET, "/categories/**", "/products/**").permitAll()
+                        // Require authentication for all GET, POST, PUT, DELETE requests to /wishlists/**
+                        .requestMatchers(HttpMethod.GET, "/wishlists/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/wishlists/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/wishlists/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/wishlists/**").authenticated()
+                        // Only allow users with the ADMIN role to POST, PUT, DELETE to /products/** and /categories/**
+                        .requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/categories/**").hasRole("ADMIN")
+                        // Require authentication for all other requests
+                        .anyRequest().authenticated() 
+                )                   
                 .build();
+    }
+    
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

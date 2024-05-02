@@ -9,13 +9,13 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.product.ProductNotFoundException;
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.wishlist.WishlistAlreadyExistsException;
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.wishlist.WishlistNotFoundException;
 import br.com.lufecrx.crudexercise.api.model.Product;
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
 import br.com.lufecrx.crudexercise.api.repository.WishlistRepository;
 import br.com.lufecrx.crudexercise.api.services.domain.product.ProductService;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.product.ProductNotFoundException;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistAlreadyExistsException;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

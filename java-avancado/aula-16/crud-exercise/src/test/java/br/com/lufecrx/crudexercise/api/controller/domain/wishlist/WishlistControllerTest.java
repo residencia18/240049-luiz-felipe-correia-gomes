@@ -25,13 +25,13 @@ import org.springframework.http.ResponseEntity;
 
 import com.github.javafaker.Faker;
 
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.wishlist.WishlistAlreadyExistsException;
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.wishlist.WishlistNotFoundException;
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.wishlist.WishlistsEmptyException;
 import br.com.lufecrx.crudexercise.api.model.Product;
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
 import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistService;
 import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistServicePaginable;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistAlreadyExistsException;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistNotFoundException;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistsEmptyException;
 
 public class WishlistControllerTest {
 

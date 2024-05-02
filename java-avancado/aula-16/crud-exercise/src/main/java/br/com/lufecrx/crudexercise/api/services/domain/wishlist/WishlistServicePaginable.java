@@ -9,9 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.wishlist.WishlistsEmptyException;
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
 import br.com.lufecrx.crudexercise.api.repository.WishlistRepository;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistsEmptyException;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

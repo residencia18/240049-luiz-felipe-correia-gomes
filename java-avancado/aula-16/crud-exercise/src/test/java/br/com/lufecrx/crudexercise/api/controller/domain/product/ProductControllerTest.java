@@ -27,12 +27,12 @@ import org.springframework.http.ResponseEntity;
 
 import com.github.javafaker.Faker;
 
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.product.InvalidProductNameException;
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.product.ProductNotFoundException;
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.product.ProductsEmptyException;
 import br.com.lufecrx.crudexercise.api.model.Product;
 import br.com.lufecrx.crudexercise.api.services.domain.product.ProductService;
 import br.com.lufecrx.crudexercise.api.services.domain.product.ProductServicePaginable;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.product.InvalidProductNameException;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.product.ProductNotFoundException;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.product.ProductsEmptyException;
 
 public class ProductControllerTest {
 

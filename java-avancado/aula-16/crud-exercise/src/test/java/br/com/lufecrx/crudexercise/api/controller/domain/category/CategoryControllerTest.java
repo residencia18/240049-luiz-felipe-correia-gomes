@@ -26,12 +26,12 @@ import org.springframework.http.ResponseEntity;
 
 import com.github.javafaker.Faker;
 
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.category.CategoriesEmptyException;
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.category.CategoryAlreadyExistsException;
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.category.CategoryNotFoundException;
 import br.com.lufecrx.crudexercise.api.model.Category;
 import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryService;
 import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryServicePaginable;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoriesEmptyException;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryAlreadyExistsException;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryNotFoundException;
 
 public class CategoryControllerTest {
 
