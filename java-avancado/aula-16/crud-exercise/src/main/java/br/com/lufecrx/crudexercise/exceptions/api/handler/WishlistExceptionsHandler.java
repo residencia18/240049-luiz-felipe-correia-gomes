@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.product.ProductsEmptyException;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistAlreadyExistsException;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistNotFoundException;
-import br.com.lufecrx.crudexercise.exceptions.message.RestErrorMessage;
+import br.com.lufecrx.crudexercise.exceptions.global.message.RestErrorMessage;
 
 @ControllerAdvice
 public class WishlistExceptionsHandler {

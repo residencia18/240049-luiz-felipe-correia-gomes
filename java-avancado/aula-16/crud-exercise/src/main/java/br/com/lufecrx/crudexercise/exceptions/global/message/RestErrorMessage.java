@@ -1,4 +1,4 @@
-package br.com.lufecrx.crudexercise.exceptions.message;
+package br.com.lufecrx.crudexercise.exceptions.global.message;
 
 import org.springframework.http.HttpStatus;
 

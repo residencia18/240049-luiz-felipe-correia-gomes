@@ -17,7 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -38,14 +38,14 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Username must not be null")
+    @NotBlank(message = "Username cannot be blank")
     @Size(min = 5, max = 15, message = "Username must be between 5 and 15 characters long")
     @Column(unique = true, nullable = false)
     private String login;
 
     private String password;
 
-    @NotNull(message = "Email must not be null")
+    @NotBlank(message = "Email cannot be blank")
     @Email(message = "Email should be valid")
     @Column(unique = true, nullable = false)
     private String email;
@@ -84,7 +84,6 @@ public class User implements UserDetails {
         return this.login;
     }
 
-    // TODO: Implement the remaining methods from UserDetails interface
     @Override
     public boolean isAccountNonExpired() {
         return true;

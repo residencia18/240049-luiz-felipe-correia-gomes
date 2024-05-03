@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoriesEmptyException;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryAlreadyExistsException;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryNotFoundException;
-import br.com.lufecrx.crudexercise.exceptions.message.RestErrorMessage;
+import br.com.lufecrx.crudexercise.exceptions.global.message.RestErrorMessage;
 
 @ControllerAdvice
 public class CategoryExceptionsHandler extends ResponseEntityExceptionHandler {

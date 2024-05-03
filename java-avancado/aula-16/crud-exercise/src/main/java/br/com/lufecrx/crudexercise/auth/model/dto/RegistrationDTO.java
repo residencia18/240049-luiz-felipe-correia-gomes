@@ -1,6 +1,8 @@
-package br.com.lufecrx.crudexercise.auth.model;
+package br.com.lufecrx.crudexercise.auth.model.dto;
 
 import java.time.LocalDate;
+
+import br.com.lufecrx.crudexercise.auth.model.UserRole;
 
 public record RegistrationDTO(
         String login,

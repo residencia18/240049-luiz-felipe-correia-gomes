@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.EmailAlreadyExistsException;
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.LoginAlreadyExistsException;
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.UserNotFoundException;
-import br.com.lufecrx.crudexercise.exceptions.message.RestErrorMessage;
+import br.com.lufecrx.crudexercise.exceptions.global.message.RestErrorMessage;
 
 @ControllerAdvice
 public class UserExceptionsHandler extends ResponseEntityExceptionHandler {
@@ -35,6 +35,4 @@ public class UserExceptionsHandler extends ResponseEntityExceptionHandler {
         RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
     }
-
 }
-

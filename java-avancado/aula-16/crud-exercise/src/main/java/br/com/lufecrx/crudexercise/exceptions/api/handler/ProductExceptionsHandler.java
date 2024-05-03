@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import br.com.lufecrx.crudexercise.exceptions.api.domain.product.InvalidProductNameException;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.product.ProductNotFoundException;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.product.ProductsEmptyException;
-import br.com.lufecrx.crudexercise.exceptions.message.RestErrorMessage;
+import br.com.lufecrx.crudexercise.exceptions.global.message.RestErrorMessage;
 
 @ControllerAdvice
 public class ProductExceptionsHandler extends ResponseEntityExceptionHandler {
