@@ -5,6 +5,7 @@ import java.util.Set;
 
 import br.com.lufecrx.crudexercise.auth.model.User;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -23,18 +24,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "wishlist")
 public class Wishlist {
-    
+
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank(message = "Wishlist name cannot be blank")
     private String name;
-    
-    @OneToMany (mappedBy = "wishlist")
-    private Set<Product> products;   
 
-    @ManyToOne
+    @OneToMany(mappedBy = "wishlist")
+    private Set<Product> products;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

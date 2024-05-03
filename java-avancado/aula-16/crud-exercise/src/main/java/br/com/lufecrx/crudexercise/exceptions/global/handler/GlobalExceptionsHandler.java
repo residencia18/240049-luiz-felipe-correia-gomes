@@ -27,7 +27,6 @@ public class GlobalExceptionsHandler {
         ex.getBindingResult().getFieldErrors()
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
         RestErrorMessage errorMessage = new RestErrorMessage(HttpStatus.BAD_REQUEST, errors.toString());
-        System.err.println(errors.toString());
         return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
     }
 
@@ -50,10 +49,4 @@ public class GlobalExceptionsHandler {
         return ResponseEntity.status(httpStatus).body(threatResponse);
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<RestErrorMessage> handleRuntimeException(RuntimeException ex) {
-        RestErrorMessage errorMessage = new RestErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        return new ResponseEntity<>(errorMessage, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 }
