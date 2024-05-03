@@ -9,10 +9,10 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.category.CategoryAlreadyExistsException;
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.category.CategoryNotFoundException;
 import br.com.lufecrx.crudexercise.api.model.Category;
 import br.com.lufecrx.crudexercise.api.repository.CategoryRepository;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryAlreadyExistsException;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

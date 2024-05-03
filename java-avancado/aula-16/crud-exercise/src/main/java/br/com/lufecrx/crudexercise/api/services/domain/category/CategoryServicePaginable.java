@@ -9,9 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import br.com.lufecrx.crudexercise.api.infra.exceptions.domain.category.CategoriesEmptyException;
 import br.com.lufecrx.crudexercise.api.model.Category;
 import br.com.lufecrx.crudexercise.api.repository.CategoryRepository;
+import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoriesEmptyException;
 import lombok.extern.slf4j.Slf4j;
 
 @Service

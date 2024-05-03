@@ -8,4 +8,8 @@ import br.com.lufecrx.crudexercise.auth.model.User;
 public interface UserRepository extends JpaRepository<User, Long>{
 
     UserDetails findByLogin(String login);
+
+    boolean existsByLogin(String login);
+
+    boolean existsByEmail(String email);
 }
