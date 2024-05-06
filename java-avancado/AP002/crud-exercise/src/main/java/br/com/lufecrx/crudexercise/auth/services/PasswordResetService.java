@@ -41,6 +41,8 @@ public class PasswordResetService {
         var oneTimePassword = otpUtil.generateOtp();
         user.setOtp(oneTimePassword);
 
+        userRepository.save(user); // Save the user with the new OTP
+        
         // Send email to reset password
         try {
             emailUtil.sendRecoverPasswordEmail(data.email(), oneTimePassword.otp());
