@@ -55,7 +55,7 @@ public class PasswordResetService {
     public void reset(String email, String token, PasswordResetDTO data) {
         log.info("Received data to reset a password");
 
-        if (token == null || data.newPassword() == null)
+        if (token == null || data == null || data.newPassword() == null) // Check if the token and new password are provided
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "OTP and new password must be provided");
 
         // Find user by email 
@@ -63,7 +63,7 @@ public class PasswordResetService {
                 .orElseThrow(() -> new UserNotFoundException(email));
 
         // Check if the OTP is valid and matches the user's, then reset the password
-        if (user.getOtp().otp().equals(token) && otpUtil.isValidOtp(user.getOtp())) {
+        if (!user.getOtp().otp().equals(token) || !otpUtil.isValidOtp(user.getOtp())) {
             throw new InvalidOtpException(new Throwable("Invalid or expired OTP"));
         } else {
             // Encrypt new password and update user's password

@@ -42,7 +42,6 @@ public class AuditLogRepositoryTest {
 
     @Test
     public void testFindAllAuditLogs() {
-        
         List<AuditLog> logs = auditLogRepository.findAll();
         assertEquals(1, logs.size(), "Expected to find 1 audit log in the database");
     }
