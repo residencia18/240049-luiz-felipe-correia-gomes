@@ -93,7 +93,7 @@ public class AuthenticationService {
             emailUtil.sendOtpEmail(data.email(), oneTimePassword.otp());
         } catch (MessagingException ex) {
             log.error("Error occurred while sending email to verify account");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error occurred while sending email to verify account");
         }
 
@@ -164,7 +164,7 @@ public class AuthenticationService {
                         emailUtil.sendOtpEmail(email, oneTimePassword.otp());
                     } catch (MessagingException ex) {
                         log.error("Error occurred while sending email to verify account");
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                                 "Error occurred while sending email to verify account");
                     }
                     user.setOtp(oneTimePassword); // Update the user's OTP

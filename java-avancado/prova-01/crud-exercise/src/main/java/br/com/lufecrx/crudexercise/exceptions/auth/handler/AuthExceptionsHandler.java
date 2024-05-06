@@ -22,9 +22,9 @@ public class AuthExceptionsHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InvalidOtpException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<RestErrorMessage> handleInvalidOtpException(InvalidOtpException ex) {
-        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(threatResponse);
     }
 }

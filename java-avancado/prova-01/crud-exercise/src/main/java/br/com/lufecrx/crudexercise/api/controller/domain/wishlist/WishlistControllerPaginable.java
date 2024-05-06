@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
 import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistServicePaginable;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/paginable/wishlists")
@@ -23,6 +24,7 @@ public class WishlistControllerPaginable {
         this.wishlistService = wishlistService;
     }
 
+    @Operation(summary = "Find all wishlists with pagination", description = "Find all wishlists with pagination")
     @GetMapping
     public ResponseEntity<Iterable<Wishlist>> findAll(
             @PathVariable int page,
@@ -32,6 +34,7 @@ public class WishlistControllerPaginable {
         return ResponseEntity.ok(entities);
     }
 
+    @Operation(summary = "Find all wishlists with pagination and size 5", description = "Find all wishlists with pagination and size 5")
     @GetMapping("/page/{page}/size=5")
     public ResponseEntity<Iterable<Wishlist>> findAllWithPaginationAndSizeFive(
             @PathVariable int page,
@@ -40,6 +43,7 @@ public class WishlistControllerPaginable {
         return ResponseEntity.ok(entities);
     }
 
+    @Operation(summary = "Find all wishlists with pagination and size 10", description = "Find all wishlists with pagination and size 10")
     @GetMapping("/page/{page}/size=10")
     public ResponseEntity<Iterable<Wishlist>> findAllWithPaginationAndSizeTen(
             @PathVariable int page,
@@ -48,6 +52,7 @@ public class WishlistControllerPaginable {
         return ResponseEntity.ok(entities);
     }
 
+    @Operation(summary = "Find all wishlists with pagination and size 20", description = "Find all wishlists with pagination and size 20")
     @GetMapping("/page/{page}/size=20")
     public ResponseEntity<Iterable<Wishlist>> findAllWithPaginationAndSizeTwenty(
             @PathVariable int page,

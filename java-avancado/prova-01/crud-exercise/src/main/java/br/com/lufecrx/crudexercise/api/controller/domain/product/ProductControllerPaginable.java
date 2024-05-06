@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lufecrx.crudexercise.api.model.Product;
 import br.com.lufecrx.crudexercise.api.services.domain.product.ProductServicePaginable;
+import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("/paginable/products")
@@ -23,6 +24,7 @@ public class ProductControllerPaginable {
         this.productService = productService;
     }
 
+    @Operation(summary = "Find all products with pagination", description = "Find all products with pagination")
     @GetMapping
     public ResponseEntity<Iterable<Product>> findAll(
             @PathVariable int page,
@@ -32,6 +34,7 @@ public class ProductControllerPaginable {
         return ResponseEntity.ok(entities);
     }
 
+    @Operation(summary = "Find all products with pagination and size 5", description = "Find all products with pagination and size 5")
     @GetMapping("/page/{page}/size=5")
     public ResponseEntity<Iterable<Product>> findAllWithPaginationAndSizeFive(
             @PathVariable int page,
@@ -40,6 +43,7 @@ public class ProductControllerPaginable {
         return ResponseEntity.ok(entities);
     }
 
+    @Operation(summary = "Find all products with pagination and size 10", description = "Find all products with pagination and size 10")
     @GetMapping("/page/{page}/size=10")
     public ResponseEntity<Iterable<Product>> findAllWithPaginationAndSizeTen(
             @PathVariable int page,
@@ -48,6 +52,7 @@ public class ProductControllerPaginable {
         return ResponseEntity.ok(entities);
     }
 
+    @Operation(summary = "Find all products with pagination and size 20", description = "Find all products with pagination and size 20")
     @GetMapping("/page/{page}/size=20")
     public ResponseEntity<Iterable<Product>> findAllWithPaginationAndSizeTwenty(
             @PathVariable int page,

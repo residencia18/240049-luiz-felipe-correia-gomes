@@ -46,7 +46,7 @@ public class PasswordResetService {
             emailUtil.sendRecoverPasswordEmail(data.email(), oneTimePassword.otp());
         } catch (MessagingException e) {
             log.error("Error occurred while sending email to reset password");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error occurred while sending email to reset password");
         }
     }
