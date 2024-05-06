@@ -23,7 +23,7 @@ import br.com.lufecrx.crudexercise.auth.model.dto.LoginResponseDTO;
 import br.com.lufecrx.crudexercise.auth.model.dto.RegistrationDTO;
 import br.com.lufecrx.crudexercise.auth.services.AuthenticationService;
 
-public class AuthenticationControllerTest {
+public class AuthenticationTest {
 
     @InjectMocks
     AuthenticationController controller;
