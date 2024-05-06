@@ -23,7 +23,7 @@ import br.com.lufecrx.crudexercise.exceptions.auth.domain.authentication.Invalid
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.authentication.InvalidOtpException;
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.EmailAlreadyExistsException;
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.LoginAlreadyExistsException;
-import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.UserAlreadyVerified;
+import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.UserAlreadyVerifiedException;
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.UserNotEnabledException;
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.UserNotFoundException;
 import jakarta.mail.MessagingException;
@@ -127,7 +127,7 @@ public class AuthenticationService {
                     log.info("User found: {}", user.getLogin());
                     // Check if the user's account is already enabled
                     if (user.isEnabled()) {
-                        throw new UserAlreadyVerified();
+                        throw new UserAlreadyVerifiedException();
                     }
 
                     // Check if the OTP is valid and matches the user's, then enable the user's
@@ -155,7 +155,7 @@ public class AuthenticationService {
                     log.info("User found: {}", user.getLogin());
                     // Check if the user's account is already enabled
                     if (user.isEnabled()) {
-                        throw new UserAlreadyVerified();
+                        throw new UserAlreadyVerifiedException();
                     }
 
                     // Send an email to the user with a new OTP

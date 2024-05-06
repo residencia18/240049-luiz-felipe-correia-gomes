@@ -7,14 +7,20 @@ import java.util.ResourceBundle;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.github.javafaker.Faker;
 
 import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistAlreadyExistsException;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistNotFoundException;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistsEmptyException;
+import br.com.lufecrx.crudexercise.exceptions.api.handler.WishlistExceptionsHandler;
+import br.com.lufecrx.crudexercise.exceptions.global.message.RestErrorMessage;
 
 public class WishlistExceptionsTest {
+
+    private WishlistExceptionsHandler wishlistExceptionsHandler;
     
     private ResourceBundle bundle;
 
@@ -22,6 +28,7 @@ public class WishlistExceptionsTest {
 
     @BeforeEach
     public void init() {
+        wishlistExceptionsHandler = new WishlistExceptionsHandler();
         faker = new Faker();
         bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
     }
@@ -29,26 +36,37 @@ public class WishlistExceptionsTest {
     @Test
     public void testWishlistEmptyException() {
         WishlistsEmptyException wishlistsEmptyException = new WishlistsEmptyException();
-        assertEquals(bundle.getString("wishlist.empty_list"), wishlistsEmptyException.getLocalizedMessage());
+        String expectedMessage = bundle.getString("wishlist.empty_list");
+
+        ResponseEntity<RestErrorMessage> responseEntity = wishlistExceptionsHandler.handleWishlistsEmptyException(wishlistsEmptyException);
+
+        // Assert that the response status is NOT_FOUND and the message is the expected one
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals(expectedMessage, responseEntity.getBody().getMessage());
     }
 
     @Test
     public void testWishlistAlreadyExistsException() {
         String fakerWishlist = faker.commerce().department();
-
         WishlistAlreadyExistsException wishlistAlreadyExistsException = new WishlistAlreadyExistsException(fakerWishlist);
-
         String expectedMessage = bundle.getString("wishlist.already_exists").replace("{name}", fakerWishlist);
 
-        assertEquals(expectedMessage, wishlistAlreadyExistsException.getLocalizedMessage());
+        ResponseEntity<RestErrorMessage> responseEntity = wishlistExceptionsHandler.handleWishlistAlreadyExistsException(wishlistAlreadyExistsException);
+
+        // Assert that the response status is BAD_REQUEST and the message is the expected one
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(expectedMessage, responseEntity.getBody().getMessage());
     }
 
     @Test 
     public void testWishlistNotFoundException() {
         WishlistNotFoundException wishlistNotFoundException = new WishlistNotFoundException(1L);
-
         String expectedMessage = bundle.getString("wishlist.not_found").replace("{id}", "1");
 
-        assertEquals(expectedMessage, wishlistNotFoundException.getLocalizedMessage());
+        ResponseEntity<RestErrorMessage> responseEntity = wishlistExceptionsHandler.handleWishlistNotFoundException(wishlistNotFoundException);
+
+        // Assert that the response status is NOT_FOUND and the message is the expected one
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals(expectedMessage, responseEntity.getBody().getMessage());
     }
 }

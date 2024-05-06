@@ -9,7 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.EmailAlreadyExistsException;
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.LoginAlreadyExistsException;
-import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.UserAlreadyVerified;
+import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.UserAlreadyVerifiedException;
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.UserNotEnabledException;
 import br.com.lufecrx.crudexercise.exceptions.auth.domain.user.UserNotFoundException;
 import br.com.lufecrx.crudexercise.exceptions.global.message.RestErrorMessage;
@@ -45,9 +45,9 @@ public class UserExceptionsHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
     }
 
-    @ExceptionHandler(UserAlreadyVerified.class)
+    @ExceptionHandler(UserAlreadyVerifiedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<RestErrorMessage> handleUserAlreadyVerified(UserAlreadyVerified ex) {
+    public ResponseEntity<RestErrorMessage> handleUserAlreadyVerified(UserAlreadyVerifiedException ex) {
         RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
     }
