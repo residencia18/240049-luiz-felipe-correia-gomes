@@ -46,9 +46,9 @@ public class SecurityConfigurations {
                         // Allow POST requests to /resend-verification?email= for all users
                         .requestMatchers(HttpMethod.POST, "/auth/resend-verification").permitAll()
                         // Allow POST requests to /request-reset for all users
-                        .requestMatchers(HttpMethod.POST, "/request-reset").permitAll()
+                        .requestMatchers(HttpMethod.POST, "password/request-reset").permitAll()
                         // Allow POST requests to /reset for all users
-                        .requestMatchers(HttpMethod.POST, "/reset").permitAll()
+                        .requestMatchers(HttpMethod.POST, "password/reset").permitAll()
                         // Allow GET requests to /categories/** and /products/** for all users
                         .requestMatchers(HttpMethod.GET, "/categories/**", "/products/**").permitAll()
                         // Require authentication for all GET, POST, PUT, DELETE requests to
