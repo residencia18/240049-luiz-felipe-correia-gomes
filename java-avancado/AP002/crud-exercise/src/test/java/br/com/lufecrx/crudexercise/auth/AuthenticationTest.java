@@ -79,7 +79,7 @@ public class AuthenticationTest {
     @Test
     public void testSignupWithValidData() {
         // Create a RegistrationDTO object with valid data
-        RegistrationDTO regDTO = new RegistrationDTO("validUser", "validPassword", "validEmail", null, null, null);
+        RegistrationDTO regDTO = new RegistrationDTO("validUser", "validPassword", "validEmail", null, null);
 
         // Mock the authentication service to do nothing when the signup method is
         // called with regDTO
