@@ -25,7 +25,7 @@ public class ProductControllerPaginable {
     }
 
     @Operation(summary = "Find all products with pagination", description = "Find all products with pagination")
-    @GetMapping
+    @GetMapping("/page/{page}")
     public ResponseEntity<Iterable<Product>> findAll(
             @PathVariable int page,
             @RequestParam(value = "sort", defaultValue = "name,asc") String[] sort) {

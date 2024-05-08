@@ -25,7 +25,7 @@ public class CategoryControllerPaginable {
     }
 
     @Operation(summary = "Find all categories with pagination", description = "Find all categories with pagination")
-    @GetMapping
+    @GetMapping("/page/{page}")
     public ResponseEntity<Iterable<Category>> findAll(
             @PathVariable int page,
             @RequestParam(value = "sort", defaultValue = "name,asc") String[] sort) {

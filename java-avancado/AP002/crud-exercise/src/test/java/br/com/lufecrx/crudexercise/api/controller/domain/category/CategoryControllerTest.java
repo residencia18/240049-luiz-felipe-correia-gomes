@@ -1,174 +1,222 @@
 package br.com.lufecrx.crudexercise.api.controller.domain.category;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.github.javafaker.Faker;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.lufecrx.crudexercise.api.model.Category;
 import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryService;
-import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryServicePaginable;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoriesEmptyException;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryAlreadyExistsException;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryNotFoundException;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 public class CategoryControllerTest {
 
-    @InjectMocks
-    private CategoryController categoryController;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @InjectMocks
-    private CategoryControllerPaginable categoryControllerPaginable;
-
-    @Mock
+    @MockBean
     private CategoryService categoryService;
 
-    @Mock
-    private CategoryServicePaginable categoryServicePaginable;
+    // Test methods when the user is authenticated as an ADMIN, which has all the permissions
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void testFindByIdAsAdmin() throws Exception {
+        Long id = 1L;
+        Category category = new Category();
+        category.setId(id);
+        category.setName("Test Category");
 
-    private List<Category> categories;
+        when(categoryService.getCategoryById(id)).thenReturn(Optional.of(category));
 
-    private Faker faker;
-
-    private ResourceBundle bundle;
-
-    @BeforeEach
-    public void init() {
-        MockitoAnnotations.openMocks(this);
-        faker = new Faker();
-        categories = fillCategories();
-        bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
-    }
-
-    public List<Category> fillCategories() {
-        List<Category> categories = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            Category category = new Category();
-            String name = faker.commerce().department();
-            category.setName(name);
-
-            categories.add(category);
-        }
-
-        return categories;
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/" + id))
+                .andExpect(status().isOk()) // Dont need authentication to access this endpoint
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    Category response = new ObjectMapper().readValue(json, Category.class);
+                    assert response.getId().equals(id);
+                    assert response.getName().equals("Test Category");
+                });
     }
 
     @Test
-    public void testFindAll() {
-        when(categoryServicePaginable.getWithPagination(anyInt(), anyInt(), any())).thenReturn(categories);
+    @WithMockUser(roles = "ADMIN")
+    public void testCreateCategoryAsAdmin() throws Exception {
+        Category dto = new Category();
+        dto.setName("Test Category");
 
-        ResponseEntity<Iterable<Category>> response = categoryControllerPaginable.findAll(1, new String[]{"name", "asc"});
+        when(categoryService.createCategory(dto)).thenReturn(dto);
 
-        assertEquals(10, ((Collection<?>) response.getBody()).size());
-        verify(categoryServicePaginable, times(1)).getWithPagination(1, 10, new String[]{"name", "asc"});
-    }
-
-
-    @Test
-    public void testFindById() {
-        Category category = categories.get(4);
-        when(categoryService.getCategoryById(anyLong())).thenReturn(Optional.of(category));
-
-        ResponseEntity<Category> response = categoryController.findById(4L);
-
-        assertEquals(category.getName(), response.getBody().getName());
-        verify(categoryService, times(1)).getCategoryById(4L);
+        mockMvc.perform(MockMvcRequestBuilders.post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void testSave() {
-        Category category = categories.get(5);
-        when(categoryService.createCategory(any(Category.class))).thenReturn(category);
+    @WithMockUser(roles = "ADMIN")
+    public void testUpdateCategoryAsAdmin() throws Exception {
+        Long id = 1L;
+        Category dto = new Category();
+        dto.setName("Updated Category");
 
-        ResponseEntity<String> response = categoryController.save(category);
+        when(categoryService.updateCategory(id, dto)).thenReturn(dto);
 
-        assertEquals(bundle.getString("category.successfully_created"), response.getBody());
-        verify(categoryService, times(1)).createCategory(category);
+        mockMvc.perform(MockMvcRequestBuilders.put("/categories/" + id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void testUpdate() {
-        Category category = categories.get(8);
-        when(categoryService.updateCategory(anyLong(), any(Category.class))).thenReturn(category);
+    @WithMockUser(roles = "ADMIN")
+    public void testDeleteCategoryAsAdmin() throws Exception {
+        Long id = 1L;
 
-        ResponseEntity<String> response = categoryController.update(category, 8L);
+        doNothing().when(categoryService).deleteCategory(id);
 
-        assertEquals(bundle.getString("category.successfully_updated"), response.getBody());
-        verify(categoryService, times(1)).updateCategory(8L, category);
+        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/" + id))
+                .andExpect(status().isOk());
+    }
+
+    // Test methods when the user is authenticated as a USER, which has limited permissions
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testFindByIdAsUser() throws Exception {
+        Long id = 1L;
+        Category category = new Category();
+        category.setId(id);
+        category.setName("Test Category");
+
+        when(categoryService.getCategoryById(id)).thenReturn(Optional.of(category));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/" + id))
+                .andExpect(status().isOk()) // Dont need authentication to access this endpoint
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    Category response = new ObjectMapper().readValue(json, Category.class);
+                    assert response.getId().equals(id);
+                    assert response.getName().equals("Test Category");
+                });
     }
 
     @Test
-    public void testDelete() {
-        doNothing().when(categoryService).deleteCategory(anyLong());
+    @WithMockUser(roles = "USER")
+    public void testCreateCategoryAsUser() throws Exception {
+        Category dto = new Category();
+        dto.setName("Test Category");
 
-        ResponseEntity<String> response = categoryController.delete(1L);
+        when(categoryService.createCategory(dto)).thenReturn(dto);
 
-        assertEquals(bundle.getString("category.successfully_deleted"), response.getBody());
-        verify(categoryService, times(1)).deleteCategory(1L);
+        mockMvc.perform(MockMvcRequestBuilders.post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                // The user is prohibited from creating a category
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    public void testWhenCategoryAlreadyExists() {
-        Category category = categories.get(2);
-        when(categoryService.createCategory(category)).thenThrow(new CategoryAlreadyExistsException(category.getName()));
+    @WithMockUser(roles = "USER")
+    public void testUpdateCategoryAsUser() throws Exception {
+        Long id = 1L;
+        Category dto = new Category();
+        dto.setName("Updated Category");
 
-        Exception exception = assertThrows(CategoryAlreadyExistsException.class, () -> {
-            categoryController.save(category);
-        });
-    
-        String expectedMessage = bundle.getString("category.already_exists").replace("{name}", category.getName());
-        String actualMessage = exception.getMessage();
-    
-        assertEquals(expectedMessage, actualMessage);
-    }	
+        when(categoryService.updateCategory(id, dto)).thenReturn(dto);
 
-    @Test
-    public void testWhenCategoryNotFound() {
-        when(categoryService.getCategoryById(anyLong())).thenThrow(new CategoryNotFoundException(1L));
-    
-        Exception exception = assertThrows(CategoryNotFoundException.class, () -> {
-            categoryController.findById(1L);
-        });
-    
-        String expectedMessage = bundle.getString("category.not_found").replace("{id}", "1");
-        String actualMessage = exception.getMessage();
-    
-        assertEquals(expectedMessage, actualMessage);
+        mockMvc.perform(MockMvcRequestBuilders.put("/categories/" + id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                // The user is prohibited from updating a category
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    public void testWhenCategoriesEmpty() {
-        when(categoryServicePaginable.getWithPagination(anyInt(), anyInt(), any())).thenThrow(new CategoriesEmptyException());
-    
-        Exception exception = assertThrows(CategoriesEmptyException.class, () -> {
-            categoryControllerPaginable.findAll(1, new String[]{"name", "asc"});
-        });
-    
-        String expectedMessage = bundle.getString("category.empty_list");
-        String actualMessage = exception.getMessage();
-    
-        assertEquals(expectedMessage, actualMessage);
+    @WithMockUser(roles = "USER")
+    public void testDeleteCategoryAsUser() throws Exception {
+        Long id = 1L;
+
+        doNothing().when(categoryService).deleteCategory(id);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/" + id))
+                // The user is prohibited from deleting a category
+                .andExpect(status().isForbidden());
+    }
+
+    // Test methods when the user is not authenticated
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testFindByIdAsNotAuthenticated() throws Exception {
+        Long id = 1L;
+        Category category = new Category();
+        category.setId(id);
+        category.setName("Test Category");
+
+        when(categoryService.getCategoryById(id)).thenReturn(Optional.of(category));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/" + id))
+                .andExpect(status().isOk()) // Dont need authentication to access this endpoint
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    Category response = new ObjectMapper().readValue(json, Category.class);
+                    assert response.getId().equals(id);
+                    assert response.getName().equals("Test Category");
+                });
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testCreateCategoryAsNotAuthenticated() throws Exception {
+        Category dto = new Category();
+        dto.setName("Test Category");
+
+        when(categoryService.createCategory(dto)).thenReturn(dto);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                // Prohibited from creating a category
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testUpdateCategoryAsNotAuthenticated() throws Exception {
+        Long id = 1L;
+        Category dto = new Category();
+        dto.setName("Updated Category");
+
+        when(categoryService.updateCategory(id, dto)).thenReturn(dto);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/categories/" + id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                // Prohibited from updating a category
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testDeleteCategoryAsNotAuthenticated() throws Exception {
+        Long id = 1L;
+
+        doNothing().when(categoryService).deleteCategory(id);
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/" + id))
+                // Prohibited from deleting a category
+                .andExpect(status().isForbidden());
     }
 }

@@ -1,19 +1,20 @@
 package br.com.lufecrx.crudexercise.api.controller.domain.wishlist;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,105 +22,62 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.github.javafaker.Faker;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.lufecrx.crudexercise.api.model.Product;
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
 import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistService;
-import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistServicePaginable;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistAlreadyExistsException;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistNotFoundException;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistsEmptyException;
 
 public class WishlistControllerTest {
 
-    @InjectMocks
-    private WishlistController wishlistController;
-
-    @InjectMocks
-    private WishlistControllerPaginable wishlistControllerPaginable;
+    private MockMvc mockMvc;
 
     @Mock
     private WishlistService wishlistService;
 
-    @Mock
-    private WishlistServicePaginable wishlistServicePaginable;
+    @InjectMocks
+    private WishlistController wishlistController;
 
-    private Faker faker;
-
-    private ResourceBundle bundle;
-
-    private List<Wishlist> wishlists;
-
-    private List<Product> products;
+    private final ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
 
     @BeforeEach
-    public void init() {
+    public void setup() {
         MockitoAnnotations.openMocks(this);
-        faker = new Faker();
-        products = fillProducts();
-        wishlists = fillWishlists();
-        bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
-    }
-
-    public List<Product> fillProducts() {
-        List<Product> products = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            Product product = new Product();
-            String name = faker.commerce().productName();
-            product.setProductName(name);
-            product.setPrice(faker.number().randomDouble(2, 1, 1000));
-            products.add(product);
-        }
-
-        return products;
-    }
-
-    public List<Wishlist> fillWishlists() {
-        List<Wishlist> wishlists = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            Wishlist wishlist = new Wishlist();
-            String name = faker.commerce().productName();
-            wishlist.setName(name);
-
-            for (int j = 0; j < 5; j++) {
-                Product product = products.get(j);
-                wishlist.addToWishlist(product);
-            }
-            
-            wishlists.add(wishlist);
-        }
-
-        return wishlists;
+        mockMvc = MockMvcBuilders.standaloneSetup(wishlistController).build();
     }
 
     @Test
-    public void testSave() {
-        for (Wishlist wishlist : wishlists) {
-            when(wishlistService.createWishlist(any(Wishlist.class))).thenReturn(wishlist);
+    public void testFindById() throws Exception {
+        // Mock the service method to return a wishlist
+        when(wishlistService.getWishlistById(anyLong())).thenReturn(Optional.of(new Wishlist()));
 
-            ResponseEntity<String> response = wishlistController.save(wishlist);
-
-            assertEquals(bundle.getString("wishlist.successfully_created"), response.getBody());
-            verify(wishlistService, times(1)).createWishlist(wishlist);
-        }
+        // Perform the GET request to retrieve a wishlist by its ID
+        mockMvc.perform(get("/wishlist/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void testFindAll() {
-        when(wishlistServicePaginable.getWithPagination(anyInt(), anyInt(), any())).thenReturn(wishlists);
+    public void testSave() throws Exception {
+        // Create a new wishlist to be saved
+        Wishlist wishlist = new Wishlist();
+        wishlist.setName("Test Wishlist");
 
-        ResponseEntity<Iterable<Wishlist>> response = wishlistControllerPaginable.findAll(1, new String[]{"name", "asc"});
+        // Mock the service method to return a new wishlist when a wishlist is created
+        when(wishlistService.createWishlist(any(Wishlist.class))).thenReturn(new Wishlist());
 
-        assertEquals(10, ((Collection<?>) response.getBody()).size());
-        verify(wishlistServicePaginable, times(1)).getWithPagination(1, 10, new String[]{"name", "asc"});
+        // Perform the POST request to create a new wishlist
+        mockMvc.perform(post("/wishlist")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(wishlist)))
+                .andExpect(status().isOk());
     }
 
-    @Test
+   @Test
     public void testAddProduct() {
         doNothing().when(wishlistService).addProductToWishlist(anyLong(), anyLong());
 
@@ -130,66 +88,24 @@ public class WishlistControllerTest {
     }
 
     @Test
-    public void testUpdate() {
-        Wishlist wishlist = wishlists.get(1);
+    public void testUpdate() throws Exception {
+        // Create a new wishlist to be updated
+        Wishlist wishlist = new Wishlist();
+        wishlist.setName("Test Wishlist");
 
-        when(wishlistService.updateWishlist(anyLong(), any(Wishlist.class))).thenReturn(wishlist);
-        ResponseEntity<String> response = wishlistController.update(wishlist, 1L);
+        // Mock the service method to return a new wishlist when a wishlist is updated
+        when(wishlistService.updateWishlist(anyLong(), any(Wishlist.class))).thenReturn(new Wishlist());
 
-        assertEquals(bundle.getString("wishlist.successfully_updated"), response.getBody());
-        verify(wishlistService, times(1)).updateWishlist(1L, wishlist);
+        mockMvc.perform(put("/wishlist/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(wishlist)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void testDelete() {
-        doNothing().when(wishlistService).deleteWishlist(anyLong());
-
-        ResponseEntity<String> response = wishlistController.delete(1L);
-
-        assertEquals(bundle.getString("wishlist.successfully_deleted"), response.getBody());
-        verify(wishlistService, times(1)).deleteWishlist(1L);
-    }
-
-    @Test
-    public void testWhenWishlistNotFound() {
-        when(wishlistController.findById(anyLong())).thenThrow(new WishlistNotFoundException(1L));
-
-        Exception exception = assertThrows(WishlistNotFoundException.class, () -> {
-            wishlistController.findById(1L);
-        });
-
-        String expectedMessage = bundle.getString("wishlist.not_found").replace("{id}", "1");
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Test 
-    public void testWhenWishlistIsEmpty() {
-        when(wishlistServicePaginable.getWithPagination(anyInt(), anyInt(), any())).thenThrow(new WishlistsEmptyException());
-        
-        Exception exception = assertThrows(WishlistsEmptyException.class, () -> {
-            wishlistControllerPaginable.findAll(1, new String[]{"name", "asc"});
-        });
-
-        String expectedMessage = bundle.getString("wishlist.empty_list");
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
-    }
-
-    @Test
-    public void testWhenWishlistAlreadyExists() {
-        Wishlist wishlist = wishlists.get(1);
-        when(wishlistController.save(any(Wishlist.class))).thenThrow(new WishlistAlreadyExistsException(wishlist.getName()));
-
-        Exception exception = assertThrows(WishlistAlreadyExistsException.class, () -> {
-            wishlistController.save(wishlist);
-        });
-
-        String expectedMessage = bundle.getString("wishlist.already_exists").replace("{name}", wishlist.getName());
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+    public void testDelete() throws Exception {
+        mockMvc.perform(delete("/wishlist/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }

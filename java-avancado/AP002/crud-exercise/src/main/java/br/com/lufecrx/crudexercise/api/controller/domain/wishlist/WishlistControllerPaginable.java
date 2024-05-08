@@ -25,7 +25,7 @@ public class WishlistControllerPaginable {
     }
 
     @Operation(summary = "Find all wishlists with pagination", description = "Find all wishlists with pagination")
-    @GetMapping
+    @GetMapping("/page/{page}")
     public ResponseEntity<Iterable<Wishlist>> findAll(
             @PathVariable int page,
             @RequestParam(value = "sort", defaultValue = "name,asc") String[] sort) {
