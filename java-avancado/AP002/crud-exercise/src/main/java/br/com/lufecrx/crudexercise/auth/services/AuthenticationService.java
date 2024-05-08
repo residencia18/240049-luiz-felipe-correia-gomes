@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import br.com.lufecrx.crudexercise.auth.infra.security.TokenService;
 import br.com.lufecrx.crudexercise.auth.model.OneTimePassword;
 import br.com.lufecrx.crudexercise.auth.model.User;
+import br.com.lufecrx.crudexercise.auth.model.UserRole;
 import br.com.lufecrx.crudexercise.auth.model.dto.AuthenticationDTO;
 import br.com.lufecrx.crudexercise.auth.model.dto.LoginResponseDTO;
 import br.com.lufecrx.crudexercise.auth.model.dto.RegistrationDTO;
@@ -107,7 +108,7 @@ public class AuthenticationService {
                 .email(data.email())
                 .birthDate(data.birthDate())
                 .mobilePhone(data.mobilePhone())
-                .role(data.role())
+                .role(UserRole.USER)
                 .otp(oneTimePassword)
                 .build();
 
