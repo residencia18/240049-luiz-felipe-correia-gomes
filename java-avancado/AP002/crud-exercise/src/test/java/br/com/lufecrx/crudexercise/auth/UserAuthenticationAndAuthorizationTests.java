@@ -4,9 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,12 +24,16 @@ import org.springframework.security.core.Authentication;
 import com.github.javafaker.Faker;
 
 import br.com.lufecrx.crudexercise.auth.infra.security.TokenService;
+import br.com.lufecrx.crudexercise.auth.model.OneTimePassword;
 import br.com.lufecrx.crudexercise.auth.model.User;
 import br.com.lufecrx.crudexercise.auth.model.dto.AuthenticationDTO;
 import br.com.lufecrx.crudexercise.auth.model.dto.LoginResponseDTO;
 import br.com.lufecrx.crudexercise.auth.model.dto.RegistrationDTO;
 import br.com.lufecrx.crudexercise.auth.repository.UserRepository;
 import br.com.lufecrx.crudexercise.auth.services.AuthenticationService;
+import br.com.lufecrx.crudexercise.auth.util.EmailUtil;
+import br.com.lufecrx.crudexercise.auth.util.OtpUtil;
+import jakarta.mail.MessagingException;
 
 public class UserAuthenticationAndAuthorizationTests {
 
@@ -38,6 +45,12 @@ public class UserAuthenticationAndAuthorizationTests {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private OtpUtil otpUtil;
+
+    @Mock
+    private EmailUtil emailUtil;
 
     @InjectMocks
     private AuthenticationService authenticationService;
@@ -99,6 +112,16 @@ public class UserAuthenticationAndAuthorizationTests {
         // existsByEmail methods are called with any string
         when(userRepository.existsByLogin(anyString())).thenReturn(false);
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
+        
+        // Mocking the generateOtp() method of the OtpUtil class to return a fake OTP
+        when(otpUtil.generateOtp()).thenReturn(new OneTimePassword("123456", LocalDateTime.now()));
+
+        // Mocking the generateOtp() method of the OtpUtil class to return a fake OTP
+        try {
+            doNothing().when(emailUtil).sendOtpEmail(anyString(), anyString());
+        } catch (MessagingException e) {
+            // This exception should not happen in this test
+        }
 
         // Calling the signup method of the authenticationService with the test data
         authenticationService.signup(data);
