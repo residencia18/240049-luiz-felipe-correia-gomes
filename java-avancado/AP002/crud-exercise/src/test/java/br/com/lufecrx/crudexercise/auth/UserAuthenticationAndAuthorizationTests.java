@@ -22,6 +22,7 @@ import com.github.javafaker.Faker;
 
 import br.com.lufecrx.crudexercise.auth.infra.security.TokenService;
 import br.com.lufecrx.crudexercise.auth.model.User;
+import br.com.lufecrx.crudexercise.auth.model.UserRole;
 import br.com.lufecrx.crudexercise.auth.model.dto.AuthenticationDTO;
 import br.com.lufecrx.crudexercise.auth.model.dto.LoginResponseDTO;
 import br.com.lufecrx.crudexercise.auth.model.dto.RegistrationDTO;
@@ -83,7 +84,7 @@ public class UserAuthenticationAndAuthorizationTests {
         String fakeEmail = faker.internet().emailAddress();
 
         // Creating a RegistrationDTO object with the fake data
-        RegistrationDTO data = new RegistrationDTO(fakeLogin, fakePassword, fakeEmail, null, null, null);
+        RegistrationDTO data = new RegistrationDTO(fakeLogin, fakePassword, fakeEmail, null, null);
 
         // Building a User object from the RegistrationDTO
         User user = User.builder()
@@ -92,7 +93,7 @@ public class UserAuthenticationAndAuthorizationTests {
                 .email(data.email())
                 .birthDate(data.birthDate())
                 .mobilePhone(data.mobilePhone())
-                .role(data.role())
+                .role(UserRole.USER)
                 .build();
 
         // Mocking the userRepository to return false when existsByLogin or
