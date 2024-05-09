@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lufecrx.crudexercise.api.model.Category;
 import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
+@ApiResponse(responseCode = "403", description = "You are not authorized to access this resource")
 @RequestMapping("/categories")
 public class CategoryController {
 
@@ -32,7 +35,6 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-
     private final ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
 
     // @GetMapping 
@@ -42,6 +44,10 @@ public class CategoryController {
     // }
 
     @Operation(summary = "Find a category by its ID", description = "Find a category by its ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Category found"),
+        @ApiResponse(responseCode = "404", description = "Category not found")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Category> findById(@PathVariable Long id) {
         Optional<Category> opt = categoryService.getCategoryById(id);
@@ -49,6 +55,10 @@ public class CategoryController {
     }
 
     @Operation(summary = "Create a new category", description = "Create a new category with the given data")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Category created"),
+        @ApiResponse(responseCode = "409", description = "Category already exists")
+    })
     @PostMapping
     public ResponseEntity<String> save(@RequestBody @Valid Category dto) {
         categoryService.createCategory(dto);
@@ -56,6 +66,10 @@ public class CategoryController {
     }
 
     @Operation(summary = "Update a category", description = "Update a category with the given data")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Category updated"),
+        @ApiResponse(responseCode = "404", description = "Category not found")
+    })
     @PutMapping("/{id}")
     public ResponseEntity<String> update(@RequestBody @Valid Category dto, @PathVariable Long id) {
         categoryService.updateCategory(id, dto);
@@ -63,6 +77,10 @@ public class CategoryController {
     }
 
     @Operation(summary = "Delete a category", description = "Delete a category by its ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Category deleted"),
+        @ApiResponse(responseCode = "404", description = "Category not found")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         categoryService.deleteCategory(id);

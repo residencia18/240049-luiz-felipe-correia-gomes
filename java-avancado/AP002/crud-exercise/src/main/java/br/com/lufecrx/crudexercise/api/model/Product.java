@@ -41,7 +41,7 @@ public class Product {
     private Wishlist wishlist;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "product_category",
+    @JoinTable(name = "product_categories",
                joinColumns = @JoinColumn(name = "product_id"),
                inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories;

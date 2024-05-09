@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
+import br.com.lufecrx.crudexercise.api.model.dto.WishlistDTO;
 import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
 @RestController
+@ApiResponse(responseCode = "403", description = "You are not authorized to access this resource")
 @RequestMapping("/wishlist")
 public class WishlistController {
     
@@ -49,7 +52,7 @@ public class WishlistController {
 
     @Operation(summary = "Create a new wishlist", description = "Create a new wishlist with the given data")
     @PostMapping
-    public ResponseEntity<String> save(@RequestBody @Valid Wishlist dto) {
+    public ResponseEntity<String> save(@RequestBody @Valid WishlistDTO dto) {
         wishlistService.createWishlist(dto);
         return ResponseEntity.ok(bundle.getString("wishlist.successfully_created"));
     }

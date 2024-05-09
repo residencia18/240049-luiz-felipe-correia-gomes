@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import br.com.lufecrx.crudexercise.exceptions.global.handler.CustomAcessDeniedHandler;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
@@ -71,6 +73,8 @@ public class SecurityConfigurations {
                 // Add JWT token filter to the filter chain
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedHandler(new CustomAcessDeniedHandler()))
                 .build();
     }
 

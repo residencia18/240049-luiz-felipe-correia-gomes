@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lufecrx.crudexercise.api.model.Product;
 import br.com.lufecrx.crudexercise.api.services.domain.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
+@ApiResponse(responseCode = "403", description = "You are not authorized to access this resource")
 @RequestMapping("/products")
 public class ProductController {
 
@@ -42,6 +45,10 @@ public class ProductController {
     // }
 
     @Operation(summary = "Create a new product", description = "Create a new product with the given data")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Product created"),
+        @ApiResponse(responseCode = "409", description = "Product already exists")        
+    })
     @PostMapping
     public ResponseEntity<String> save(@RequestBody @Valid Product dto) {
         productService.createProduct(dto);

@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import br.com.lufecrx.crudexercise.api.model.Product;
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
+import br.com.lufecrx.crudexercise.api.model.dto.WishlistDTO;
 import br.com.lufecrx.crudexercise.api.repository.WishlistRepository;
 import br.com.lufecrx.crudexercise.api.services.domain.product.ProductService;
+import br.com.lufecrx.crudexercise.auth.model.User;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.product.ProductNotFoundException;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistAlreadyExistsException;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.wishlist.WishlistNotFoundException;
@@ -23,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Qualifier("standard")
 @Slf4j
 public class WishlistService {
+    // TODO: Update the service 
 
     @Autowired
     private WishlistRepository wishlistRepository;
@@ -74,7 +78,16 @@ public class WishlistService {
     public void deleteWishlist(Long wishlistId) {
         log.info("Deleting wishlist with ID {}", wishlistId);
 
+        // Verify if the wishlist exists
         if (!wishlistRepository.existsById(wishlistId)) {
+            throw new WishlistNotFoundException(wishlistId);
+        }
+
+        // Get the authenticated user
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Verify if the wishlist belongs to the authenticated user
+        if (!wishlistRepository.findById(wishlistId).get().getUser().equals(user)) {
             throw new WishlistNotFoundException(wishlistId);
         }
 
@@ -96,23 +109,45 @@ public class WishlistService {
     public Optional<Wishlist> getWishlistById(Long wishlistId) {
         log.info("Getting wishlist by ID {}", wishlistId);
 
+        
+        // Verify if the wishlist exists
         if (!wishlistRepository.existsById(wishlistId)) {
+            throw new WishlistNotFoundException(wishlistId);
+        
+        }
+
+        // Get the authenticated user
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Verify if the wishlist belongs to the authenticated user
+        if (!wishlistRepository.findById(wishlistId).get().getUser().equals(user)) {
             throw new WishlistNotFoundException(wishlistId);
         }
 
+        // Return the wishlist
         return Optional.of(wishlistRepository.findById(wishlistId)
                 .orElseThrow(() -> new WishlistNotFoundException(wishlistId)));
     }
 
     @CacheEvict(value = "wishlists", allEntries = true)
-    public Wishlist createWishlist(Wishlist wishlist) {
-        log.info("Creating wishlist with name {}", wishlist.getName());
+    public Wishlist createWishlist(WishlistDTO wishlist) {
+        log.info("Creating wishlist with name {}", wishlist.name());
 
-        if (wishlistRepository.existsByName(wishlist.getName())) {
-            throw new WishlistAlreadyExistsException(wishlist.getName());
+        // Get the authenticated user
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        // Verify if the authenticated user already has a wishlist with the same name
+        if (wishlistRepository.existsByNameAndUser(wishlist.name(), user)) {
+            throw new WishlistAlreadyExistsException(wishlist.name());
         }
 
-        return wishlistRepository.save(wishlist);
+        // Create the new wishlist and set the authenticated user
+        Wishlist newWishlist = Wishlist.builder()
+                            .name(wishlist.name())
+                            .build();
+        newWishlist.setUser(user);
+
+        return wishlistRepository.save(newWishlist);
     }
 
     @CacheEvict(value = "wishlists", allEntries = true)

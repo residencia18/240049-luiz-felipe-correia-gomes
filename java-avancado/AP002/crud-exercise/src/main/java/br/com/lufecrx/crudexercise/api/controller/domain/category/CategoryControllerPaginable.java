@@ -12,8 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lufecrx.crudexercise.api.model.Category;
 import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryServicePaginable;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
+@ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Categories found"),
+    @ApiResponse(responseCode = "404", description = "Categories not found")
+})
 @RequestMapping("/paginable/categories")
 public class CategoryControllerPaginable {
 
