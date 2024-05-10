@@ -16,11 +16,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
+@RequestMapping("/paginable/categories")
 @ApiResponses(value = {
     @ApiResponse(responseCode = "200", description = "Categories found"),
     @ApiResponse(responseCode = "404", description = "Categories not found")
 })
-@RequestMapping("/paginable/categories")
 public class CategoryControllerPaginable {
 
     private CategoryServicePaginable categoryService;

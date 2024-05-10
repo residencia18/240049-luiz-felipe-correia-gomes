@@ -19,11 +19,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.lufecrx.crudexercise.api.model.Category;
+import br.com.lufecrx.crudexercise.api.model.dto.CategoryDTO;
 import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class CategoryControllerTest {
+
+    // TODO: Refactor the tests to use the new CategoryController
 
     @Autowired
     private MockMvc mockMvc;
@@ -42,7 +45,7 @@ public class CategoryControllerTest {
 
         when(categoryService.getCategoryById(id)).thenReturn(Optional.of(category));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/categories/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/find-category/" + id))
                 .andExpect(status().isOk()) // Dont need authentication to access this endpoint
                 .andExpect(result -> {
                     String json = result.getResponse().getContentAsString();
@@ -55,12 +58,13 @@ public class CategoryControllerTest {
     @Test
     @WithMockUser(roles = "ADMIN")
     public void testCreateCategoryAsAdmin() throws Exception {
-        Category dto = new Category();
-        dto.setName("Test Category");
+        CategoryDTO dto = new CategoryDTO("Test Category");
+        Category category = new Category();
+        category.setName("Test Category");
 
-        when(categoryService.createCategory(dto)).thenReturn(dto);
+        when(categoryService.createCategory(dto)).thenReturn(category);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/categories")
+        mockMvc.perform(MockMvcRequestBuilders.post("/categories/add-category")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(dto)))
                 .andExpect(status().isOk());
@@ -70,12 +74,13 @@ public class CategoryControllerTest {
     @WithMockUser(roles = "ADMIN")
     public void testUpdateCategoryAsAdmin() throws Exception {
         Long id = 1L;
-        Category dto = new Category();
-        dto.setName("Updated Category");
+        CategoryDTO dto = new CategoryDTO("Updated Category");
+        Category category = new Category();
+        category.setName("Updated Category");
 
-        when(categoryService.updateCategory(id, dto)).thenReturn(dto);
+        when(categoryService.updateCategory(id, dto)).thenReturn(category);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/categories/" + id)
+        mockMvc.perform(MockMvcRequestBuilders.put("/categories/update-category/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(dto)))
                 .andExpect(status().isOk());
@@ -88,7 +93,7 @@ public class CategoryControllerTest {
 
         doNothing().when(categoryService).deleteCategory(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/delete-category/" + id))
                 .andExpect(status().isOk());
     }
 
@@ -103,7 +108,7 @@ public class CategoryControllerTest {
 
         when(categoryService.getCategoryById(id)).thenReturn(Optional.of(category));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/categories/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/find-category/" + id))
                 .andExpect(status().isOk()) // Dont need authentication to access this endpoint
                 .andExpect(result -> {
                     String json = result.getResponse().getContentAsString();
@@ -116,12 +121,13 @@ public class CategoryControllerTest {
     @Test
     @WithMockUser(roles = "USER")
     public void testCreateCategoryAsUser() throws Exception {
-        Category dto = new Category();
-        dto.setName("Test Category");
+        CategoryDTO dto = new CategoryDTO("Test Category");
+        Category category = new Category();
+        category.setName("Test Category");
 
-        when(categoryService.createCategory(dto)).thenReturn(dto);
+        when(categoryService.createCategory(dto)).thenReturn(category);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/categories")
+        mockMvc.perform(MockMvcRequestBuilders.post("/categories/add-category")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(dto)))
                 // The user is prohibited from creating a category
@@ -132,12 +138,13 @@ public class CategoryControllerTest {
     @WithMockUser(roles = "USER")
     public void testUpdateCategoryAsUser() throws Exception {
         Long id = 1L;
-        Category dto = new Category();
-        dto.setName("Updated Category");
+        CategoryDTO dto = new CategoryDTO("Updated Category");
+        Category category = new Category();
+        category.setName("Updated Category");
 
-        when(categoryService.updateCategory(id, dto)).thenReturn(dto);
+        when(categoryService.updateCategory(id, dto)).thenReturn(category);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/categories/" + id)
+        mockMvc.perform(MockMvcRequestBuilders.put("/categories/update-category/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(dto)))
                 // The user is prohibited from updating a category
@@ -151,14 +158,13 @@ public class CategoryControllerTest {
 
         doNothing().when(categoryService).deleteCategory(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/delete-category/" + id))
                 // The user is prohibited from deleting a category
                 .andExpect(status().isForbidden());
     }
 
     // Test methods when the user is not authenticated
     @Test
-    @WithMockUser(roles = "USER")
     public void testFindByIdAsNotAuthenticated() throws Exception {
         Long id = 1L;
         Category category = new Category();
@@ -167,7 +173,7 @@ public class CategoryControllerTest {
 
         when(categoryService.getCategoryById(id)).thenReturn(Optional.of(category));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/categories/" + id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/categories/find-category/" + id))
                 .andExpect(status().isOk()) // Dont need authentication to access this endpoint
                 .andExpect(result -> {
                     String json = result.getResponse().getContentAsString();
@@ -178,45 +184,44 @@ public class CategoryControllerTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     public void testCreateCategoryAsNotAuthenticated() throws Exception {
-        Category dto = new Category();
-        dto.setName("Test Category");
+        CategoryDTO dto = new CategoryDTO("Test Category");
+        Category category = new Category();
+        category.setName("Test Category");
 
-        when(categoryService.createCategory(dto)).thenReturn(dto);
+        when(categoryService.createCategory(dto)).thenReturn(category);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/categories")
+        mockMvc.perform(MockMvcRequestBuilders.post("/categories/add-category")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(dto)))
-                // Prohibited from creating a category
+                // The user is prohibited from creating a category
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     public void testUpdateCategoryAsNotAuthenticated() throws Exception {
         Long id = 1L;
-        Category dto = new Category();
-        dto.setName("Updated Category");
+        CategoryDTO dto = new CategoryDTO("Updated Category");
+        Category category = new Category();
+        category.setName("Updated Category");
 
-        when(categoryService.updateCategory(id, dto)).thenReturn(dto);
+        when(categoryService.updateCategory(id, dto)).thenReturn(category);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/categories/" + id)
+        mockMvc.perform(MockMvcRequestBuilders.put("/categories/update-category/" + id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(dto)))
-                // Prohibited from updating a category
+                // The user is prohibited from updating a category
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    @WithMockUser(roles = "USER")
     public void testDeleteCategoryAsNotAuthenticated() throws Exception {
         Long id = 1L;
 
         doNothing().when(categoryService).deleteCategory(id);
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/" + id))
-                // Prohibited from deleting a category
+        mockMvc.perform(MockMvcRequestBuilders.delete("/categories/delete-category/" + id))
+                // The user is prohibited from deleting a category
                 .andExpect(status().isForbidden());
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import br.com.lufecrx.crudexercise.api.model.Category;
+import br.com.lufecrx.crudexercise.api.model.dto.CategoryDTO;
 import br.com.lufecrx.crudexercise.api.repository.CategoryRepository;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryAlreadyExistsException;
 import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryNotFoundException;
@@ -25,54 +26,73 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @CacheEvict(value = "categories", allEntries = true)
-    public Category createCategory(Category category) {
-        log.info("Creating category with name {}", category.getName());
+    public void createCategory(CategoryDTO category) {
+        log.info("Creating category with name {}", category.name());
 
-        if (categoryRepository.existsByName(category.getName())) {
-            throw new CategoryAlreadyExistsException(category.getName());
+        // Check if the category already exists in the database
+        if (categoryRepository.existsByName(category.name())) {
+            throw new CategoryAlreadyExistsException(category.name());
         }
-        return categoryRepository.save(category);
+
+        // Create a new category with the given data
+        Category newCategory = Category.builder()
+                .name(category.name())
+                .build();
+
+        // Save the category to the database
+        categoryRepository.save(newCategory);
     }
 
     // @Cacheable(value = "categories")
     // public Iterable<Category> getAllCategories() {
-    //     log.info("Getting all categories");
+    // log.info("Getting all categories");
 
-    //     if (!categoryRepository.findAll().iterator().hasNext()) {
-    //         throw new CategoriesEmptyException();
-    //     }
+    // if (!categoryRepository.findAll().iterator().hasNext()) {
+    // throw new CategoriesEmptyException();
+    // }
 
-    //     return categoryRepository.findAll();
+    // return categoryRepository.findAll();
     // }
 
     @Cacheable(value = "categories", key = "#categoryId")
-    public Optional<Category> getCategoryById(Long categoryId) {
+    public Optional<CategoryDTO> getCategoryById(Long categoryId) {
         log.info("Getting category by ID {}", categoryId);
 
-        return Optional.of(categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException(categoryId)));
+        Optional<Category> category = categoryRepository.findById(categoryId);
+        
+        // Return the category if it exists, otherwise throw an exception
+        if (category.isPresent()) {
+            return Optional.of(CategoryDTO.from(category.get()));
+        } else {
+            throw new CategoryNotFoundException(categoryId);
+        }
     }
 
     @CacheEvict(value = "categories", allEntries = true)
-    public Category updateCategory(Long categoryId, Category updatedCategory) {
+    public void updateCategory(Long categoryId, CategoryDTO updatedCategory) {
         log.info("Updating category with ID {}", categoryId);
 
-        Optional<Category> existingCategory = categoryRepository.findById(categoryId);
-        if (existingCategory.isPresent()) {
-            Category category = existingCategory.get();
-            category.setName(updatedCategory.getName());
-            return categoryRepository.save(category);
-        }
-        throw new CategoryNotFoundException(categoryId);
+        // Check if the category exists in the database
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+
+        // Update the category with the new data
+        category.setName(updatedCategory.name());
+
+        // Save the updated category to the database
+        categoryRepository.save(category);
     }
 
     @CacheEvict(value = "categories", allEntries = true)
     public void deleteCategory(Long categoryId) {
         log.info("Deleting category with ID {}", categoryId);
 
+        // Check if the category exists in the database
         if (!categoryRepository.existsById(categoryId)) {
             throw new CategoryNotFoundException(categoryId);
         }
+
+        // Delete the category from the database 
         categoryRepository.deleteById(categoryId);
     }
 

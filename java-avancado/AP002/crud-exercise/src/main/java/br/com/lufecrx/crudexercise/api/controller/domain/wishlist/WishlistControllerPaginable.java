@@ -12,9 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
 import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistServicePaginable;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/paginable/wishlists")
+@ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Wishlists found"),
+    @ApiResponse(responseCode = "404", description = "Wishlists not found")
+})
 public class WishlistControllerPaginable {
 
     private final WishlistServicePaginable wishlistService;

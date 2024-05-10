@@ -27,6 +27,8 @@ import br.com.lufecrx.crudexercise.api.services.domain.product.ProductService;
 
 public class ProductControllerTest {
 
+    // TODO: Refactor the tests to use the new ProductController
+
     private MockMvc mockMvc;
 
     @Mock

@@ -34,6 +34,8 @@ import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistService;
 
 public class WishlistControllerTest {
 
+    // TODO: Refactor the tests to use the new WishlistController
+
     private MockMvc mockMvc;
 
     @Mock
@@ -56,7 +58,7 @@ public class WishlistControllerTest {
         when(wishlistService.getWishlistById(anyLong())).thenReturn(Optional.of(new Wishlist()));
 
         // Perform the GET request to retrieve a wishlist by its ID
-        mockMvc.perform(get("/wishlist/1")
+        mockMvc.perform(get("/wishlist/find-wishlist/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
