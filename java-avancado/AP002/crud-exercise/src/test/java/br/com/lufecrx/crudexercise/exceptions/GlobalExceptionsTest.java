@@ -23,7 +23,7 @@ import br.com.lufecrx.crudexercise.exceptions.global.message.RestErrorMessage;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
-public class GlobalExceptionsHandlerTest {
+public class GlobalExceptionsTest {
 
     private GlobalExceptionsHandler globalExceptionsHandler;
 
