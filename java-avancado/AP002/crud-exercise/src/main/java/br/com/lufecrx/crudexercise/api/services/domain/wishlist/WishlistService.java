@@ -169,11 +169,10 @@ public class WishlistService {
     }
 
     @CacheEvict(value = "wishlists", allEntries = true)
-    public void updateWishlist(Long wishlistId, WishlistDTO updatedWishlist) {
+    public void renameWishlist(Long wishlistId, WishlistDTO updatedWishlist) {
         log.info("Updating wishlist with ID {}", wishlistId);
 
-        // Get the authenticated user and verify if the wishlist belongs to the
-        // authenticated user
+        // Get the authenticated user and verify if the wishlist belongs to the authenticated user
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // Verify if the authenticated user already has a wishlist with the same name
@@ -189,7 +188,7 @@ public class WishlistService {
             throw new WishlistNotFoundException(wishlistId);
         }
 
-        // Update the wishlist and save it if it exists
+        // Rename the wishlist and save it if it exists
         if (existingWishlist.isPresent()) {
             Wishlist wishlist = existingWishlist.get();
             wishlist.setName(updatedWishlist.name());

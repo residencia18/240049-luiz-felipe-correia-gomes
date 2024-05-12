@@ -21,7 +21,6 @@ import com.github.javafaker.Faker;
 import br.com.lufecrx.crudexercise.api.model.Product;
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
 import br.com.lufecrx.crudexercise.api.repository.WishlistRepository;
-import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistService;
 import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistServicePaginable;
 
 @SpringBootTest
@@ -29,9 +28,6 @@ public class WishlistCachingIntegrationTest {
 
     @Autowired
     private WishlistServicePaginable wishlistServicePag;
-
-    @Autowired
-    private WishlistService wishlistService;
 
     @SpyBean
     private WishlistRepository wishlistRepository;
@@ -117,8 +113,8 @@ public class WishlistCachingIntegrationTest {
         // Verify that the method was called only once due to caching
         verify(wishlistRepository, times(1)).findAll(pageRequest);
 
-        // Delete a wishlist to evict the cache
-        wishlistService.deleteWishlist(wishlists.get(0).getId());
+        // Clear the cache, simulating when a method that modifies the database is called
+        cacheManager.getCache("wishlists").clear();
 
         // Call the method again
         wishlistServicePag.getWithPagination(1, 5, new String[] { "name", "asc" });

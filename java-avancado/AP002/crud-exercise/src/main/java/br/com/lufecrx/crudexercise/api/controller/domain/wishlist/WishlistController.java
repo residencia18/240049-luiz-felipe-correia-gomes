@@ -29,7 +29,7 @@ import jakarta.validation.Valid;
         @ApiResponse(responseCode = "404", description = "Wishlist not found"),
         @ApiResponse(responseCode = "409", description = "Wishlist already exists"),
 })
-@RequestMapping("/wishlist")
+@RequestMapping("/wishlists")
 public class WishlistController {
 
     private final WishlistService wishlistService;
@@ -73,26 +73,26 @@ public class WishlistController {
 
     @Operation(summary = "Add a product to a wishlist", description = "Add a product to a wishlist with the given data")
     @ApiResponse(responseCode = "200", description = "Product added to wishlist")
-    @PutMapping("/{wistlistId}/add-product/{productId}")
-    public ResponseEntity<String> addProduct(@PathVariable Long wistlistId, @PathVariable Long productId) {
-        wishlistService.addProductToWishlist(wistlistId, productId);
+    @PutMapping("/{wishlistId}/add-product/{productId}")
+    public ResponseEntity<String> addProduct(@PathVariable Long wishlistId, @PathVariable Long productId) {
+        wishlistService.addProductToWishlist(wishlistId, productId);
         return ResponseEntity.ok(bundle.getString("wishlist.successfully_added_product"));
     }
 
     @Operation(summary = "Remove a product from a wishlist", description = "Remove a product from a wishlist with the given data")
     @ApiResponse(responseCode = "200", description = "Product removed to wishlist")
-    @DeleteMapping("/{wihslistId}/remove-product/{productId}")
+    @PutMapping("/{wishlistId}/remove-product/{productId}")
     public ResponseEntity<String> removeProduct(@PathVariable Long wishlistId, @PathVariable Long productId) {
         wishlistService.removeProductFromWishlist(wishlistId, productId);
         return ResponseEntity.ok(bundle.getString("wishlist.successfully_removed_product"));
     }
 
-    @Operation(summary = "Update a wishlist", description = "Update a wishlist with the given data")
-    @ApiResponse(responseCode = "200", description = "Wishlist updated")
+    @Operation(summary = "Rename a wishlist", description = "Rename a wishlist with the given data")
+    @ApiResponse(responseCode = "200", description = "Wishlist renamed")
     @PutMapping("/update-wishlist/{wishlistActualId}")
     public ResponseEntity<String> update(@PathVariable Long wishlistActualId,
             @RequestBody @Valid WishlistDTO wishlistUpdated) {
-        wishlistService.updateWishlist(wishlistActualId, wishlistUpdated);
+        wishlistService.renameWishlist(wishlistActualId, wishlistUpdated);
         return ResponseEntity.ok(bundle.getString("wishlist.successfully_updated"));
     }
 

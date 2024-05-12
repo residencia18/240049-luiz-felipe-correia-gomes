@@ -56,7 +56,7 @@ public class ProductController {
 
     @Operation(summary = "Find a product by its ID", description = "Find a product by its ID")
     @ApiResponse(responseCode = "200", description = "Product found")
-    @GetMapping("/find-product/{wishedProductId}")
+    @GetMapping("/find-product/{productId}")
     public ResponseEntity<Optional<ProductDTO>> findById(@PathVariable Long productId) {
         Optional<ProductDTO> product = productService.getProductById(productId);
         return ResponseEntity.ok(product);

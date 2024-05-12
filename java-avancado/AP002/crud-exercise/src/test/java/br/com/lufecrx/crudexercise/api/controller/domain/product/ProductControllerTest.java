@@ -1,11 +1,10 @@
 package br.com.lufecrx.crudexercise.api.controller.domain.product;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,86 +12,156 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.lufecrx.crudexercise.api.model.Product;
+import br.com.lufecrx.crudexercise.api.model.dto.ProductDTO;
 import br.com.lufecrx.crudexercise.api.services.domain.product.ProductService;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ProductControllerTest {
 
-    // TODO: Refactor the tests to use the new ProductController
-
+    @Autowired
     private MockMvc mockMvc;
 
-    @Mock
+    @MockBean
     private ProductService productService;
 
-    @InjectMocks
-    private ProductController productController;
+    private ProductDTO dto;
 
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(productController).build();
+    public void setUp() {
+        // Create a new ProductDTO object to use in the tests
+        dto = new ProductDTO("Test Product", 10.0, null);
+
+        // Mock the ProductService methods  
+        when(productService.getProductById(1L)).thenReturn(Optional.of(dto));
+        doNothing().when(productService).createProduct(dto);
+        doNothing().when(productService).updateProduct(1L, dto);
+        doNothing().when(productService).deleteProduct(1L);
     }
 
+    // ### Test methods when the user is authenticated as an ADMIN, which has all the permissions ###
     @Test
-    public void testSaveProduct() throws Exception {
-        // Create a new product to be saved
-        Product product = new Product();
-        product.setProductName("Test Product");
-        product.setPrice(10.0);
-    
-        // Mock the service method to return the product object when a product is created
-        when(productService.createProduct(any(Product.class))).thenReturn(product);
-    
-        // Perform the POST request to create a new product
-        mockMvc.perform(post("/products")
+    @WithMockUser(roles = "ADMIN")
+    public void testCreateProductAsAdmin() throws Exception {
+        mockMvc.perform(post("/products/add-product")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(product)))
-                .andExpect(status().isOk()); // Expect a 200 status code
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isOk()); // The admin user is allowed to create a product
     }
 
     @Test
-    public void testFindProductById() throws Exception {
-        // Mock the service method to return a new product object when a product is found by ID
-        when(productService.getProductById(anyLong())).thenReturn(Optional.of(new Product()));
-
-        // Perform the GET request to find a product by ID
-        mockMvc.perform(get("/products/1")
+    @WithMockUser(roles = "ADMIN")
+    public void testFindProductByIdAsAdmin() throws Exception {
+        mockMvc.perform(get("/products/find-product/1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()) // This endpoint is public
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    ProductDTO response = new ObjectMapper().readValue(json, ProductDTO.class);
+                    assert response.name().equals("Test Product");
+                });
     }
 
     @Test
-    public void testUpdateProduct() throws Exception {
-        // Create a new product to be updated
-        Product product = new Product();
-        product.setProductName("Test Product");
-        product.setPrice(10.0);
-        
-        // Mock the service method to return a new product object when a product is updated
-        when(productService.updateProduct(anyLong(), any(Product.class))).thenReturn(new Product());
-
-        // Perform the PUT request to update the product
-        mockMvc.perform(put("/products/1")
+    @WithMockUser(roles = "ADMIN")
+    public void testUpdateProductAsAdmin() throws Exception {
+        mockMvc.perform(put("/products/update-product/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(product)))
-                .andExpect(status().isOk());
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isOk()); // The admin user is allowed to update a product
     }
 
     @Test
-    public void testDeleteProduct() throws Exception {
-        // Perform the DELETE request to delete a product by ID
-        mockMvc.perform(delete("/products/1")
+    @WithMockUser(roles = "ADMIN")
+    public void testDeleteProductAsAdmin() throws Exception {
+        mockMvc.perform(delete("/products/delete-product/1")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()); // The admin user is allowed to delete a product
+    }
+
+    // ### Test methods when the user is authenticated as a USER, which has limited permissions ###
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testCreateProductAsUser() throws Exception {
+        mockMvc.perform(post("/products/add-product")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isForbidden()); // The user is prohibited from creating a product
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testFindProductByIdAsUser() throws Exception {
+        mockMvc.perform(get("/products/find-product/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()) // The user is allowed to find a product
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    ProductDTO response = new ObjectMapper().readValue(json, ProductDTO.class);
+                    assert response.name().equals("Test Product");
+                });
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testUpdateProductAsUser() throws Exception {
+        mockMvc.perform(put("/products/update-product/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isForbidden()); // The user is prohibited from updating a product
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testDeleteProductAsUser() throws Exception {
+        mockMvc.perform(delete("/products/delete-product/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden()); // The user is prohibited from deleting a product
+    }
+
+    // ### Test methods when the user is not authenticated ###	
+    @Test
+    public void testCreateProductAsNotAuthenticated() throws Exception {
+        mockMvc.perform(post("/products/add-product")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isForbidden()); // The guest user is prohibited from creating a product
+    }
+
+    @Test
+    public void testFindProductByIdAsNotAuthenticated() throws Exception {
+        mockMvc.perform(get("/products/find-product/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()) // The guest user is allowed to find a product
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    ProductDTO response = new ObjectMapper().readValue(json, ProductDTO.class);
+                    assert response.name().equals("Test Product");
+                });
+    }
+
+    @Test
+    public void testUpdateProductAsNotAuthenticated() throws Exception {
+        mockMvc.perform(put("/products/update-product/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isForbidden()); // The guest user is prohibited from updating a product
+    }
+
+    @Test
+    public void testDeleteProductAsNotAuthenticated() throws Exception {
+        mockMvc.perform(delete("/products/delete-product/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden()); // The guest user is prohibited from deleting a product
     }
 }
