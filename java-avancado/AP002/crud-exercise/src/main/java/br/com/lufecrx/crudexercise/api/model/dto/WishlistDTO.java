@@ -1,5 +1,6 @@
 package br.com.lufecrx.crudexercise.api.model.dto;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
@@ -9,7 +10,8 @@ public record WishlistDTO(
     Set<ProductDTO> products
 ) {
     public static WishlistDTO from(Wishlist wishlist) {
-        return new WishlistDTO(wishlist.getName(), ProductDTO.from(wishlist.getProducts()));
+        Set<ProductDTO> productsDTO = wishlist.getProducts() != null ? ProductDTO.from(wishlist.getProducts()) : new HashSet<>();
+        return new WishlistDTO(wishlist.getName(), productsDTO);
     }
 } 
 

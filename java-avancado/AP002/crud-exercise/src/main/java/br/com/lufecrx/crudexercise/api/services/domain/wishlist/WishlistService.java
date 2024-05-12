@@ -41,22 +41,20 @@ public class WishlistService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // Verify if the wishlist exists and belongs to the authenticated user
-        Optional<Wishlist> optWishlist = wishlistRepository.findById(wishlistId);
-        if (optWishlist.isEmpty() || !optWishlist.get().getUser().equals(user)) {
+        Optional<Wishlist> wishlist = wishlistRepository.findByIdAndUser(productId, user);
+        if (wishlist.isEmpty()) {
             throw new WishlistNotFoundException(wishlistId);
         }
 
-        // Verify if the product exists, otherwise throw an exception
+        // Verify if the product exists
         Optional<Product> product = productRepository.findById(productId);
         if (product.isEmpty()) {
             throw new ProductNotFoundException(productId);
         }
-        
-        Wishlist wishlist = optWishlist.get();
-        
+
         // Add the product to the wishlist and save it
-        wishlist.addToWishlist(product.get());
-        wishlistRepository.save(wishlist);
+        wishlist.get().addToWishlist(product.get());
+        wishlistRepository.save(wishlist.get());
     }
 
     @CacheEvict(value = "wishlists", allEntries = true)
@@ -67,8 +65,8 @@ public class WishlistService {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         // Verify if the wishlist exists and belongs to the authenticated user
-        Optional<Wishlist> optWishlist = wishlistRepository.findById(wishlistId);
-        if (optWishlist.isEmpty() || !optWishlist.get().getUser().equals(user)) {
+        Optional<Wishlist> wishlist = wishlistRepository.findByIdAndUser(productId, user);
+        if (wishlist.isEmpty()) {
             throw new WishlistNotFoundException(wishlistId);
         }
 
@@ -78,11 +76,9 @@ public class WishlistService {
             throw new ProductNotFoundException(productId);
         }
 
-        Wishlist wishlist = optWishlist.get();
-
         // Remove the product from the wishlist and save it
-        wishlist.removeFromWishlist(product.get());
-        wishlistRepository.save(wishlist);
+        wishlist.get().removeFromWishlist(product.get());
+        wishlistRepository.save(wishlist.get());
     }
 
     @CacheEvict(value = "wishlists", allEntries = true)
@@ -92,13 +88,15 @@ public class WishlistService {
         // Get the authenticated user
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // Verify if the wishlist belongs to the authenticated user
-        if (!wishlistRepository.findById(wishlistId).get().getUser().equals(user)) {
+        Optional<Wishlist> wishlist = wishlistRepository.findByIdAndUser(wishlistId, user);
+        if (wishlist.isPresent()) {
+            // Delete the wishlist if it exists and belongs to the authenticated user
+            wishlistRepository.delete(wishlist.get());
+        } else {
+            // Throw an exception if the wishlist is not found
             throw new WishlistNotFoundException(wishlistId);
         }
 
-        // Delete the wishlist
-        wishlistRepository.deleteById(wishlistId);
     }
 
     // @Cacheable(value = "wishlists")
@@ -119,14 +117,15 @@ public class WishlistService {
         // Get the authenticated user
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // Verify if the wishlist belongs to the authenticated user
-        Optional<Wishlist> wishlist = wishlistRepository.findById(wishlistId);
-        if (wishlist.isEmpty() || !wishlist.get().getUser().equals(user)) {
-            throw new WishlistNotFoundException(wishlistId);
+        Optional<Wishlist> wishlist = wishlistRepository.findByIdAndUser(wishlistId, user);
+
+        if (wishlist.isPresent()) {
+            // Return the wishlist if it exists and belongs to the authenticated user
+            return Optional.of(WishlistDTO.from(wishlist.get()));
         }
 
-        // Return the wishlist
-        return Optional.of(WishlistDTO.from(wishlist.get()));      
+        // Throw an exception if the wishlist is not found
+        throw new WishlistNotFoundException(wishlistId);
     }
 
     @Cacheable(value = "wishlists", key = "#name")
@@ -136,14 +135,15 @@ public class WishlistService {
         // Get the authenticated user
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // Verify if the wishlist belongs to the authenticated user
-        if (wishlistRepository.existsByNameAndUser(name, user)) {
-            throw new WishlistNotFoundException(name);
+        Optional<Wishlist> wishlist = wishlistRepository.findByNameAndUser(name, user);
+
+        if (wishlist.isPresent()) {
+            // Return the wishlist if it exists and belongs to the authenticated user
+            return Optional.of(WishlistDTO.from(wishlist.get()));
         }
 
-        // Return the wishlist
-        Optional<Wishlist> wishlist = wishlistRepository.findByNameAndUser(name, user);
-        return Optional.of(WishlistDTO.from(wishlist.get()));        
+        // Throw an exception if the wishlist is not found
+        throw new WishlistNotFoundException(name);
     }
 
     @CacheEvict(value = "wishlists", allEntries = true)
@@ -172,30 +172,27 @@ public class WishlistService {
     public void renameWishlist(Long wishlistId, WishlistDTO updatedWishlist) {
         log.info("Updating wishlist with ID {}", wishlistId);
 
-        // Get the authenticated user and verify if the wishlist belongs to the authenticated user
+        // Get the authenticated user and verify if the wishlist belongs to the
+        // authenticated user
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // Verify if the authenticated user already has a wishlist with the same name
-        if (wishlistRepository.existsByNameAndUser(updatedWishlist.name(), user)) {
-            throw new WishlistAlreadyExistsException(updatedWishlist.name());
-        }
+        Optional<Wishlist> wishlist = wishlistRepository.findByIdAndUser(wishlistId, user);
+        if (wishlist.isPresent()) {
+        // Verify if the wishlist exists and belongs to the authenticated user
 
-        // Get the existing wishlist
-        Optional<Wishlist> existingWishlist = wishlistRepository.findById(wishlistId);
+            if (wishlistRepository.existsByNameAndUser(updatedWishlist.name(), user)) {
+                // Verify if the authenticated user already has a wishlist with the same name
+                throw new WishlistAlreadyExistsException(updatedWishlist.name());
+            }
 
-        // Verify if the wishlist belongs to the authenticated user and if it exists
-        if (!existingWishlist.get().getUser().equals(user)) {
+            // Rename the wishlist
+            wishlist.get().setName(updatedWishlist.name());
+            wishlistRepository.save(wishlist.get());
+
+        } else {
+            // Return an exception if the wishlist does not exist
             throw new WishlistNotFoundException(wishlistId);
         }
 
-        // Rename the wishlist and save it if it exists
-        if (existingWishlist.isPresent()) {
-            Wishlist wishlist = existingWishlist.get();
-            wishlist.setName(updatedWishlist.name());
-            wishlistRepository.save(wishlist);
-        }
-
-        // Return an exception if the wishlist does not exist
-        throw new WishlistNotFoundException(wishlistId);
     }
 }

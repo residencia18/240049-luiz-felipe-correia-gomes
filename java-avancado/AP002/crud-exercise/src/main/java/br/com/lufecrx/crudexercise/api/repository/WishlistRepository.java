@@ -13,7 +13,11 @@ public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
 
     boolean existsByNameAndUser(String name, User user);
 
+    boolean existsByIdAndUser(Long id, User user);
+
     Optional<Wishlist> findByName(String name);
 
     Optional<Wishlist> findByNameAndUser(String name, User user);
+
+    Optional<Wishlist> findByIdAndUser(Long id, User user);
 }

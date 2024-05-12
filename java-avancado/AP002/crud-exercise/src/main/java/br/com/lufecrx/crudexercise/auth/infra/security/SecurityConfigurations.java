@@ -39,6 +39,8 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         // Allow access to the Swagger UI for all users
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        // Allow access to the Dashboard Test endpoint for all users
+                        .requestMatchers("/profile/dashboard").permitAll()
                         // Allow POST requests to /auth/signup for all users
                         .requestMatchers(HttpMethod.POST, "/auth/signup").permitAll()
                         // Allow POST requests to /auth/login for all users

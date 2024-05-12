@@ -114,7 +114,7 @@ public class ProductService {
     }
 
     // Verify if the category already exists in the database
-    public static Optional<Set<Category>> validateCategories(ProductDTO product, CategoryRepository categoryRepository) {
+    public Optional<Set<Category>> validateCategories(ProductDTO product, CategoryRepository categoryRepository) {
         log.info("Validating categories for product with name {}", product.name());
 
         Set<Category> existingCategories = new HashSet<>();
