@@ -12,9 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lufecrx.crudexercise.api.model.Category;
 import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryServicePaginable;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/paginable/categories")
+@ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Categories found"),
+    @ApiResponse(responseCode = "404", description = "Categories not found")
+})
 public class CategoryControllerPaginable {
 
     private CategoryServicePaginable categoryService;
@@ -25,7 +31,7 @@ public class CategoryControllerPaginable {
     }
 
     @Operation(summary = "Find all categories with pagination", description = "Find all categories with pagination")
-    @GetMapping
+    @GetMapping("/page/{page}")
     public ResponseEntity<Iterable<Category>> findAll(
             @PathVariable int page,
             @RequestParam(value = "sort", defaultValue = "name,asc") String[] sort) {

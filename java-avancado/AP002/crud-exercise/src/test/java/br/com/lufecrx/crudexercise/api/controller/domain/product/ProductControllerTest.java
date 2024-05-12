@@ -1,185 +1,167 @@
 package br.com.lufecrx.crudexercise.api.controller.domain.product;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 
-import com.github.javafaker.Faker;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.lufecrx.crudexercise.api.model.Product;
+import br.com.lufecrx.crudexercise.api.model.dto.ProductDTO;
 import br.com.lufecrx.crudexercise.api.services.domain.product.ProductService;
-import br.com.lufecrx.crudexercise.api.services.domain.product.ProductServicePaginable;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.product.InvalidProductNameException;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.product.ProductNotFoundException;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.product.ProductsEmptyException;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ProductControllerTest {
 
-    @InjectMocks
-    private ProductController productController;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @InjectMocks
-    private ProductControllerPaginable productControllerPaginable;
-
-    @Mock
+    @MockBean
     private ProductService productService;
 
-    @Mock
-    private ProductServicePaginable productServicePaginable;
-
-    private List<Product> products;
-
-    private Faker faker;
-
-    private ResourceBundle bundle;
+    private ProductDTO dto;
 
     @BeforeEach
-    public void init() {
-        MockitoAnnotations.openMocks(this);
-        faker = new Faker();
-        products = fillProducts();
-        bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+    public void setUp() {
+        // Create a new ProductDTO object to use in the tests
+        dto = new ProductDTO("Test Product", 10.0, null);
+
+        // Mock the ProductService methods  
+        when(productService.getProductById(1L)).thenReturn(Optional.of(dto));
+        doNothing().when(productService).createProduct(dto);
+        doNothing().when(productService).updateProduct(1L, dto);
+        doNothing().when(productService).deleteProduct(1L);
     }
 
-    public List<Product> fillProducts() {
-        List<Product> products = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            Product product = new Product();
-            String productName = faker.commerce().productName();
-            Double price = faker.number().randomDouble(2, 0, 1000);
-
-            product.setProductName(productName);
-            product.setPrice(price);
-            products.add(product);
-        }
-
-        return products;
+    // ### Test methods when the user is authenticated as an ADMIN, which has all the permissions ###
+    @Test
+    @WithMockUser(roles = "ADMIN")
+    public void testCreateProductAsAdmin() throws Exception {
+        mockMvc.perform(post("/products/add-product")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isOk()); // The admin user is allowed to create a product
     }
 
     @Test
-    public void testSave() {
-        for (Product product : products) {
-            when(productService.createProduct(any(Product.class))).thenReturn(product);
-
-            ResponseEntity<String> response = productController.save(product);
-
-            assertEquals(bundle.getString("product.successfully_created"), response.getBody());
-            verify(productService, times(1)).createProduct(product);
-        }
+    @WithMockUser(roles = "ADMIN")
+    public void testFindProductByIdAsAdmin() throws Exception {
+        mockMvc.perform(get("/products/find-product/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()) // This endpoint is public
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    ProductDTO response = new ObjectMapper().readValue(json, ProductDTO.class);
+                    assert response.name().equals("Test Product");
+                });
     }
 
     @Test
-    public void testFindAll() {
-        when(productServicePaginable.getWithPagination(anyInt(), anyInt(), any())).thenReturn(products);
-
-        ResponseEntity<Iterable<Product>> response = productControllerPaginable.findAll(1, new String[]{"name", "asc"});
-
-        assertEquals(10, ((Collection<?>) response.getBody()).size());
-        verify(productServicePaginable, times(1)).getWithPagination(1, 10, new String[]{"name", "asc"});
-    }
-
-
-    @Test
-    public void testFindById() {
-
-        Product product = products.get(4);
-
-        when(productService.getProductById(anyLong())).thenReturn(Optional.of(product));
-
-        ResponseEntity<Optional<Product>> response = productController.findById(4L);
-
-        assertEquals(product, response.getBody().get());
-        verify(productService, times(1)).getProductById(4L);
+    @WithMockUser(roles = "ADMIN")
+    public void testUpdateProductAsAdmin() throws Exception {
+        mockMvc.perform(put("/products/update-product/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isOk()); // The admin user is allowed to update a product
     }
 
     @Test
-    public void testUpdate() {
-        Product product = products.get(1);
+    @WithMockUser(roles = "ADMIN")
+    public void testDeleteProductAsAdmin() throws Exception {
+        mockMvc.perform(delete("/products/delete-product/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()); // The admin user is allowed to delete a product
+    }
 
-        when(productService.updateProduct(anyLong(), any(Product.class))).thenReturn(product);
-
-        ResponseEntity<String> response = productController.update(1L, product);
-
-        assertEquals(bundle.getString("product.successfully_updated"), response.getBody());
-        verify(productService, times(1)).updateProduct(1L, product);
+    // ### Test methods when the user is authenticated as a USER, which has limited permissions ###
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testCreateProductAsUser() throws Exception {
+        mockMvc.perform(post("/products/add-product")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isForbidden()); // The user is prohibited from creating a product
     }
 
     @Test
-    public void testDelete() {
-        doNothing().when(productService).deleteProduct(anyLong());
-
-        ResponseEntity<String> response = productController.delete(1L);
-
-        assertEquals(bundle.getString("product.successfully_deleted"), response.getBody());
-        verify(productService, times(1)).deleteProduct(1L);
+    @WithMockUser(roles = "USER")
+    public void testFindProductByIdAsUser() throws Exception {
+        mockMvc.perform(get("/products/find-product/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()) // The user is allowed to find a product
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    ProductDTO response = new ObjectMapper().readValue(json, ProductDTO.class);
+                    assert response.name().equals("Test Product");
+                });
     }
 
     @Test
-    public void testWhenDeleteProductNotFound() {
-        Long productId = 1L;
-
-        doThrow(new ProductNotFoundException(productId)).when(productService).deleteProduct(productId);
-
-        Exception exception = assertThrows(ProductNotFoundException.class, () -> {
-            productController.delete(productId);
-        });
-
-        String expectedMessage = bundle.getString("product.not_found").replace("{id}", productId.toString());
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+    @WithMockUser(roles = "USER")
+    public void testUpdateProductAsUser() throws Exception {
+        mockMvc.perform(put("/products/update-product/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isForbidden()); // The user is prohibited from updating a product
     }
 
     @Test
-    public void testWhenInvalidProductName() {
-        Product product = products.get(5);
+    @WithMockUser(roles = "USER")
+    public void testDeleteProductAsUser() throws Exception {
+        mockMvc.perform(delete("/products/delete-product/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden()); // The user is prohibited from deleting a product
+    }
 
-        product.setProductName(""); // Product name cannot be blank
-
-        Exception exception = assertThrows(InvalidProductNameException.class, () -> {
-            ProductService.validateProductName(product.getProductName());
-        });
-
-        String expectedMessage = bundle.getString("product.invalid_name").replace("{name}", product.getProductName());
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+    // ### Test methods when the user is not authenticated ###	
+    @Test
+    public void testCreateProductAsNotAuthenticated() throws Exception {
+        mockMvc.perform(post("/products/add-product")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isForbidden()); // The guest user is prohibited from creating a product
     }
 
     @Test
-    public void testWhenProductsEmpty() {
-        when(productServicePaginable.getWithPagination(anyInt(), anyInt(), any())).thenThrow(new ProductsEmptyException());
-
-        Exception exception = assertThrows(ProductsEmptyException.class, () -> {
-            productControllerPaginable.findAll(1, new String[]{"name", "asc"});
-        });
-
-        String expectedMessage = bundle.getString("product.empty_list");
-        String actualMessage = exception.getMessage();
-
-        assertEquals(expectedMessage, actualMessage);
+    public void testFindProductByIdAsNotAuthenticated() throws Exception {
+        mockMvc.perform(get("/products/find-product/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()) // The guest user is allowed to find a product
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    ProductDTO response = new ObjectMapper().readValue(json, ProductDTO.class);
+                    assert response.name().equals("Test Product");
+                });
     }
 
+    @Test
+    public void testUpdateProductAsNotAuthenticated() throws Exception {
+        mockMvc.perform(put("/products/update-product/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isForbidden()); // The guest user is prohibited from updating a product
+    }
+
+    @Test
+    public void testDeleteProductAsNotAuthenticated() throws Exception {
+        mockMvc.perform(delete("/products/delete-product/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden()); // The guest user is prohibited from deleting a product
+    }
 }

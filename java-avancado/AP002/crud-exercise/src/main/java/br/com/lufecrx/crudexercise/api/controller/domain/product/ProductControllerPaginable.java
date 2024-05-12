@@ -12,9 +12,15 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.lufecrx.crudexercise.api.model.Product;
 import br.com.lufecrx.crudexercise.api.services.domain.product.ProductServicePaginable;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/paginable/products")
+@ApiResponses(value = {
+    @ApiResponse(responseCode = "200", description = "Products found"),
+    @ApiResponse(responseCode = "404", description = "Products not found")
+})
 public class ProductControllerPaginable {
 
     private ProductServicePaginable productService;
@@ -25,7 +31,7 @@ public class ProductControllerPaginable {
     }
 
     @Operation(summary = "Find all products with pagination", description = "Find all products with pagination")
-    @GetMapping
+    @GetMapping("/page/{page}")
     public ResponseEntity<Iterable<Product>> findAll(
             @PathVariable int page,
             @RequestParam(value = "sort", defaultValue = "name,asc") String[] sort) {

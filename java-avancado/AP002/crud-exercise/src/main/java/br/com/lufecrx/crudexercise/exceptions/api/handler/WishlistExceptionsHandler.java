@@ -32,6 +32,6 @@ public class WishlistExceptionsHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<RestErrorMessage> handleWishlistAlreadyExistsException(WishlistAlreadyExistsException ex) {
         RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.BAD_REQUEST, ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(threatResponse);
     }
 }

@@ -14,4 +14,9 @@ public class WishlistNotFoundException extends RuntimeException {
         super(bundle.getString("wishlist.not_found").replace("{id}", id.toString()));
         log.error("Wishlist with id {} not found.", id);
     }
+
+    public WishlistNotFoundException(String name) {
+        super(bundle.getString("wishlist.not_found_name").replace("{name}", name));
+        log.error("Wishlist with name {} not found.", name);
+    }
 }

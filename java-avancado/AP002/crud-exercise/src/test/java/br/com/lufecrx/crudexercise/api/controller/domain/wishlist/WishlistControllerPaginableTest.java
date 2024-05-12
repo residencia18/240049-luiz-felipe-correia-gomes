@@ -1,24 +1,22 @@
 package br.com.lufecrx.crudexercise.api.controller.domain.wishlist;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import br.com.lufecrx.crudexercise.api.model.Wishlist;
 import br.com.lufecrx.crudexercise.api.services.domain.wishlist.WishlistServicePaginable;
@@ -31,58 +29,59 @@ public class WishlistControllerPaginableTest {
     @Mock
     private WishlistServicePaginable wishlistService;
 
+    private MockMvc mockMvc;
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
+        mockMvc = MockMvcBuilders.standaloneSetup(wishlistControllerPaginable).build();
     }
 
     @Test
-    public void testFindAllWithPaginationAndSizeFive() {
-        when(wishlistService.getWithPagination(anyInt(), eq(5), any()))
-                .thenReturn(Arrays.asList(new Wishlist(), new Wishlist()));
-        ResponseEntity<Iterable<Wishlist>> response = wishlistControllerPaginable.findAllWithPaginationAndSizeFive(1, new String[]{"name", "asc"});
-        assertNotNull(response.getBody());
-        verify(wishlistService, times(1)).getWithPagination(anyInt(), eq(5), any());
-    }
-    
-    @Test
-    public void testFindAllWithPaginationAndSizeTen() {
+    public void testFindAll() throws Exception {
+        // Mock the service method to return a list of products
         when(wishlistService.getWithPagination(anyInt(), eq(10), any()))
                 .thenReturn(Arrays.asList(new Wishlist(), new Wishlist()));
-        ResponseEntity<Iterable<Wishlist>> response = wishlistControllerPaginable.findAllWithPaginationAndSizeTen(1, new String[]{"name", "asc"});
-        assertNotNull(response.getBody());
-        verify(wishlistService, times(1)).getWithPagination(anyInt(), eq(10), any());
+
+        // Perform the GET request to retrieve all products
+        mockMvc.perform(get("/paginable/wishlists/page/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
-    
+
     @Test
-    public void testFindAllWithPaginationAndSizeTwenty() {
+    public void testFindAllWithPaginationAndSizeFive() throws Exception {
+        // Mock the service method to return a list of products
+        when(wishlistService.getWithPagination(anyInt(), eq(5), any()))
+                .thenReturn(Arrays.asList(new Wishlist(), new Wishlist()));
+        
+        // Perform the GET request to retrieve all products with pagination and size 5
+        mockMvc.perform(get("/paginable/wishlists/page/1/size=5")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testFindAllWithPaginationAndSizeTen() throws Exception {
+        // Mock the service method to return a list of products
+        when(wishlistService.getWithPagination(anyInt(), eq(10), any()))
+                .thenReturn(Arrays.asList(new Wishlist(), new Wishlist()));
+        
+        // Perform the GET request to retrieve all products with pagination and size 10
+        mockMvc.perform(get("/paginable/wishlists/page/1/size=10")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testFindAllWithPaginationAndSizeTwenty() throws Exception {
+        // Mock the service method to return a list of products
         when(wishlistService.getWithPagination(anyInt(), eq(20), any()))
                 .thenReturn(Arrays.asList(new Wishlist(), new Wishlist()));
-        ResponseEntity<Iterable<Wishlist>> response = wishlistControllerPaginable.findAllWithPaginationAndSizeTwenty(1, new String[]{"name", "asc"});
-        assertNotNull(response.getBody());
-        verify(wishlistService, times(1)).getWithPagination(anyInt(), eq(20), any());
-    }
-    
-    @Test
-    public void testFindAllWithPaginationAndSizeFiveEmptyResult() {
-        when(wishlistService.getWithPagination(anyInt(), eq(5), any())).thenReturn(Collections.emptyList());
-        ResponseEntity<Iterable<Wishlist>> response = wishlistControllerPaginable.findAllWithPaginationAndSizeFive(1, new String[]{"name", "asc"});
-        assertNotNull(response.getBody());
-        assertTrue(!response.getBody().iterator().hasNext());
-    }
-    
-    @Test
-    public void testFindAllWithPaginationAndSizeFiveNullResult() {
-        when(wishlistService.getWithPagination(anyInt(), eq(5), any())).thenReturn(null);
-        ResponseEntity<Iterable<Wishlist>> response = wishlistControllerPaginable.findAllWithPaginationAndSizeFive(1, new String[]{"name", "asc"});
-        assertNull(response.getBody());
-    }
-    
-    @Test
-    public void testFindAllWithPaginationAndSizeFiveDifferentPage() {
-        when(wishlistService.getWithPagination(eq(2), eq(5), any())).thenReturn(Arrays.asList(new Wishlist(), new Wishlist()));
-        ResponseEntity<Iterable<Wishlist>> response = wishlistControllerPaginable.findAllWithPaginationAndSizeFive(2, new String[]{"name", "asc"});
-        assertNotNull(response.getBody());
-        verify(wishlistService, times(1)).getWithPagination(eq(2), eq(5), any());
+        
+        // Perform the GET request to retrieve all products with pagination and size 20
+        mockMvc.perform(get("/paginable/wishlists/page/1/size=20")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 }

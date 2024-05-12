@@ -54,7 +54,7 @@ public class WishlistExceptionsTest {
         ResponseEntity<RestErrorMessage> responseEntity = wishlistExceptionsHandler.handleWishlistAlreadyExistsException(wishlistAlreadyExistsException);
 
         // Assert that the response status is BAD_REQUEST and the message is the expected one
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
         assertEquals(expectedMessage, responseEntity.getBody().getMessage());
     }
 

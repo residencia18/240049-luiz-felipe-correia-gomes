@@ -1,95 +1,92 @@
 package br.com.lufecrx.crudexercise.api.controller.domain.category;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import br.com.lufecrx.crudexercise.api.model.Category;
 import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryServicePaginable;
 
 public class CategoryControllerPaginableTest {
 
-    @InjectMocks
-    private CategoryControllerPaginable categoryControllerPaginable;
+        private MockMvc mockMvc;
 
-    @Mock
-    private CategoryServicePaginable categoryService;
+        @InjectMocks
+        private CategoryControllerPaginable categoryControllerPaginable;
 
-    @BeforeEach
-    public void setup() {
-        MockitoAnnotations.openMocks(this);
-    }
+        @Mock
+        private CategoryServicePaginable categoryService;
 
-    @Test
-    public void testFindAllWithPaginationAndSizeFive() {
-        when(categoryService.getWithPagination(anyInt(), eq(5), any()))
-                .thenReturn(Arrays.asList(new Category(), new Category()));
-        ResponseEntity<Iterable<Category>> response = categoryControllerPaginable.findAllWithPaginationAndSizeFive(1,
-                new String[] { "name", "asc" });
-        assertNotNull(response.getBody());
-        verify(categoryService, times(1)).getWithPagination(anyInt(), eq(5), any());
-    }
+        @BeforeEach
+        public void setup() {
+                MockitoAnnotations.openMocks(this);
+                mockMvc = MockMvcBuilders.standaloneSetup(categoryControllerPaginable).build();
+        }
 
-    @Test
-    public void testFindAllWithPaginationAndSizeTen() {
-        when(categoryService.getWithPagination(anyInt(), eq(10), any()))
-                .thenReturn(Arrays.asList(new Category(), new Category()));
-        ResponseEntity<Iterable<Category>> response = categoryControllerPaginable.findAllWithPaginationAndSizeTen(1,
-                new String[] { "name", "asc" });
-        assertNotNull(response.getBody());
-        verify(categoryService, times(1)).getWithPagination(anyInt(), eq(10), any());
-    }
+        @Test
+        public void testFindAll() throws Exception {
+            // Mock the service to return a list of categories
+            when(categoryService.getWithPagination(anyInt(), eq(10), any()))
+                    .thenReturn(Arrays.asList(new Category(), new Category()));
+        
+            // Perform a GET request and expect a 200 OK status, simulating a request to /paginable/categories/page/1
+            mockMvc.perform(get("/paginable/categories/page/1")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(content().json("[{}, {}]"));
+        }
 
-    @Test
-    public void testFindAllWithPaginationAndSizeTwenty() {
-        when(categoryService.getWithPagination(anyInt(), eq(20), any()))
-                .thenReturn(Arrays.asList(new Category(), new Category()));
-        ResponseEntity<Iterable<Category>> response = categoryControllerPaginable.findAllWithPaginationAndSizeTwenty(1,
-                new String[] { "name", "asc" });
-        assertNotNull(response.getBody());
-        verify(categoryService, times(1)).getWithPagination(anyInt(), eq(20), any());
-    }
+        @Test
+        public void testFindAllWithPaginationAndSizeFive() throws Exception {
+                // Mock the service to return a list of categories
+                when(categoryService.getWithPagination(anyInt(), eq(5), any()))
+                                .thenReturn(Arrays.asList(new Category(), new Category()));
+                
+                // Perform a GET request and expect a 200 OK status, simulating a request to /paginable/categories/page/1/size=5
+                mockMvc.perform(get("/paginable/categories/page/1/size=5")
+                                .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json("[{}, {}]"));
+        }
 
-    @Test
-    public void testFindAllWithPaginationAndSizeFiveEmptyResult() {
-        when(categoryService.getWithPagination(anyInt(), eq(5), any())).thenReturn(Collections.emptyList());
-        ResponseEntity<Iterable<Category>> response = categoryControllerPaginable.findAllWithPaginationAndSizeFive(1,
-                new String[] { "name", "asc" });
-        assertNotNull(response.getBody());
-        assertTrue(!response.getBody().iterator().hasNext());
-    }
+        @Test
+        public void testFindAllWithPaginationAndSizeTen() throws Exception {
+                // Mock the service to return a list of categories
+                when(categoryService.getWithPagination(anyInt(), eq(10), any()))
+                                .thenReturn(Arrays.asList(new Category(), new Category()));
 
-    @Test
-    public void testFindAllWithPaginationAndSizeFiveNullResult() {
-        when(categoryService.getWithPagination(anyInt(), eq(5), any())).thenReturn(null);
-        ResponseEntity<Iterable<Category>> response = categoryControllerPaginable.findAllWithPaginationAndSizeFive(1,
-                new String[] { "name", "asc" });
-        assertNull(response.getBody());
-    }
+                // Perform a GET request and expect a 200 OK status, simulating a request to /paginable/categories/page/1/size=10
+                mockMvc.perform(get("/paginable/categories/page/1/size=10")
+                                .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json("[{}, {}]"));
+        }
 
-    @Test
-    public void testFindAllWithPaginationAndSizeFiveDifferentPage() {
-        when(categoryService.getWithPagination(eq(2), eq(5), any()))
-                .thenReturn(Arrays.asList(new Category(), new Category()));
-        ResponseEntity<Iterable<Category>> response = categoryControllerPaginable.findAllWithPaginationAndSizeFive(2,
-                new String[] { "name", "asc" });
-        assertNotNull(response.getBody());
-        verify(categoryService, times(1)).getWithPagination(eq(2), eq(5), any());
-    }
+        @Test
+        public void testFindAllWithPaginationAndSizeTwenty() throws Exception {
+                // Mock the service to return a list of categories
+                when(categoryService.getWithPagination(anyInt(), eq(20), any()))
+                                .thenReturn(Arrays.asList(new Category(), new Category()));
+
+                // Perform a GET request and expect a 200 OK status, simulating a request to /paginable/categories/page/1/size=20
+                mockMvc.perform(get("/paginable/categories/page/1/size=20")
+                                .contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(status().isOk())
+                                .andExpect(content().json("[{}, {}]"));
+        }
 }

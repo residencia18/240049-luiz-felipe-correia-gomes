@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import br.com.lufecrx.crudexercise.exceptions.global.handler.CustomAcessDeniedHandler;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfigurations {
@@ -37,6 +39,8 @@ public class SecurityConfigurations {
                 .authorizeHttpRequests(authorize -> authorize
                         // Allow access to the Swagger UI for all users
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        // Allow access to the Dashboard Test endpoint for all users
+                        .requestMatchers("/profile/dashboard").permitAll()
                         // Allow POST requests to /auth/signup for all users
                         .requestMatchers(HttpMethod.POST, "/auth/signup").permitAll()
                         // Allow POST requests to /auth/login for all users
@@ -71,6 +75,8 @@ public class SecurityConfigurations {
                 // Add JWT token filter to the filter chain
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
 
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedHandler(new CustomAcessDeniedHandler()))
                 .build();
     }
 

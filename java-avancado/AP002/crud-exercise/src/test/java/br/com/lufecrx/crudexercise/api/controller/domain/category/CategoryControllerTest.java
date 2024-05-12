@@ -1,174 +1,168 @@
 package br.com.lufecrx.crudexercise.api.controller.domain.category;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
 
-import com.github.javafaker.Faker;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.lufecrx.crudexercise.api.model.Category;
+import br.com.lufecrx.crudexercise.api.model.dto.CategoryDTO;
 import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryService;
-import br.com.lufecrx.crudexercise.api.services.domain.category.CategoryServicePaginable;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoriesEmptyException;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryAlreadyExistsException;
-import br.com.lufecrx.crudexercise.exceptions.api.domain.category.CategoryNotFoundException;
 
+@SpringBootTest
+@AutoConfigureMockMvc
 public class CategoryControllerTest {
 
-    @InjectMocks
-    private CategoryController categoryController;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @InjectMocks
-    private CategoryControllerPaginable categoryControllerPaginable;
-
-    @Mock
+    @MockBean
     private CategoryService categoryService;
 
-    @Mock
-    private CategoryServicePaginable categoryServicePaginable;
-
-    private List<Category> categories;
-
-    private Faker faker;
-
-    private ResourceBundle bundle;
+    private CategoryDTO dto;
 
     @BeforeEach
-    public void init() {
-        MockitoAnnotations.openMocks(this);
-        faker = new Faker();
-        categories = fillCategories();
-        bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+    public void setUp() {
+        // Create a new CategoryDTO object to use in the tests
+        dto = new CategoryDTO("Test Category");
+        
+        // Mock the CategoryService methods
+        when(categoryService.getCategoryById(1L)).thenReturn(Optional.of(dto));
+        doNothing().when(categoryService).createCategory(dto);
+        doNothing().when(categoryService).updateCategory(1L, dto);
+        doNothing().when(categoryService).deleteCategory(1L);
     }
 
-    public List<Category> fillCategories() {
-        List<Category> categories = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {
-            Category category = new Category();
-            String name = faker.commerce().department();
-            category.setName(name);
-
-            categories.add(category);
-        }
-
-        return categories;
-    }
-
+    // ### Test methods when the user is authenticated as an ADMIN, which has all the permissions ###
     @Test
-    public void testFindAll() {
-        when(categoryServicePaginable.getWithPagination(anyInt(), anyInt(), any())).thenReturn(categories);
-
-        ResponseEntity<Iterable<Category>> response = categoryControllerPaginable.findAll(1, new String[]{"name", "asc"});
-
-        assertEquals(10, ((Collection<?>) response.getBody()).size());
-        verify(categoryServicePaginable, times(1)).getWithPagination(1, 10, new String[]{"name", "asc"});
-    }
-
-
-    @Test
-    public void testFindById() {
-        Category category = categories.get(4);
-        when(categoryService.getCategoryById(anyLong())).thenReturn(Optional.of(category));
-
-        ResponseEntity<Category> response = categoryController.findById(4L);
-
-        assertEquals(category.getName(), response.getBody().getName());
-        verify(categoryService, times(1)).getCategoryById(4L);
+    @WithMockUser(roles = "ADMIN")
+    public void testFindByIdAsAdmin() throws Exception {
+        mockMvc.perform(get("/categories/find-category/" + 1L))
+                .andExpect(status().isOk()) // Dont need authentication to access this endpoint
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    CategoryDTO response = new ObjectMapper().readValue(json, CategoryDTO.class);
+                    assert response.name().equals("Test Category");
+                });
     }
 
     @Test
-    public void testSave() {
-        Category category = categories.get(5);
-        when(categoryService.createCategory(any(Category.class))).thenReturn(category);
-
-        ResponseEntity<String> response = categoryController.save(category);
-
-        assertEquals(bundle.getString("category.successfully_created"), response.getBody());
-        verify(categoryService, times(1)).createCategory(category);
+    @WithMockUser(roles = "ADMIN")
+    public void testCreateCategoryAsAdmin() throws Exception {
+        mockMvc.perform(post("/categories/add-category")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void testUpdate() {
-        Category category = categories.get(8);
-        when(categoryService.updateCategory(anyLong(), any(Category.class))).thenReturn(category);
-
-        ResponseEntity<String> response = categoryController.update(category, 8L);
-
-        assertEquals(bundle.getString("category.successfully_updated"), response.getBody());
-        verify(categoryService, times(1)).updateCategory(8L, category);
+    @WithMockUser(roles = "ADMIN")
+    public void testUpdateCategoryAsAdmin() throws Exception {
+        mockMvc.perform(put("/categories/update-category/" + 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void testDelete() {
-        doNothing().when(categoryService).deleteCategory(anyLong());
+    @WithMockUser(roles = "ADMIN")
+    public void testDeleteCategoryAsAdmin() throws Exception {
+        mockMvc.perform(delete("/categories/delete-category/" + 1L))
+                .andExpect(status().isOk());
+    }
 
-        ResponseEntity<String> response = categoryController.delete(1L);
-
-        assertEquals(bundle.getString("category.successfully_deleted"), response.getBody());
-        verify(categoryService, times(1)).deleteCategory(1L);
+    // ### Test methods when the user is authenticated as a USER, which has limited permissions ###
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testFindByIdAsUser() throws Exception {
+        mockMvc.perform(get("/categories/find-category/" + 1L))
+                .andExpect(status().isOk()) // Dont need authentication to access this endpoint
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    CategoryDTO response = new ObjectMapper().readValue(json, CategoryDTO.class);
+                    assert response.name().equals("Test Category");
+                });
     }
 
     @Test
-    public void testWhenCategoryAlreadyExists() {
-        Category category = categories.get(2);
-        when(categoryService.createCategory(category)).thenThrow(new CategoryAlreadyExistsException(category.getName()));
-
-        Exception exception = assertThrows(CategoryAlreadyExistsException.class, () -> {
-            categoryController.save(category);
-        });
-    
-        String expectedMessage = bundle.getString("category.already_exists").replace("{name}", category.getName());
-        String actualMessage = exception.getMessage();
-    
-        assertEquals(expectedMessage, actualMessage);
-    }	
-
-    @Test
-    public void testWhenCategoryNotFound() {
-        when(categoryService.getCategoryById(anyLong())).thenThrow(new CategoryNotFoundException(1L));
-    
-        Exception exception = assertThrows(CategoryNotFoundException.class, () -> {
-            categoryController.findById(1L);
-        });
-    
-        String expectedMessage = bundle.getString("category.not_found").replace("{id}", "1");
-        String actualMessage = exception.getMessage();
-    
-        assertEquals(expectedMessage, actualMessage);
+    @WithMockUser(roles = "USER")
+    public void testCreateCategoryAsUser() throws Exception {
+        mockMvc.perform(post("/categories/add-category")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                // The user is prohibited from creating a category
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    public void testWhenCategoriesEmpty() {
-        when(categoryServicePaginable.getWithPagination(anyInt(), anyInt(), any())).thenThrow(new CategoriesEmptyException());
-    
-        Exception exception = assertThrows(CategoriesEmptyException.class, () -> {
-            categoryControllerPaginable.findAll(1, new String[]{"name", "asc"});
-        });
-    
-        String expectedMessage = bundle.getString("category.empty_list");
-        String actualMessage = exception.getMessage();
-    
-        assertEquals(expectedMessage, actualMessage);
+    @WithMockUser(roles = "USER")
+    public void testUpdateCategoryAsUser() throws Exception {
+        mockMvc.perform(put("/categories/update-category/" + 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                // The user is prohibited from updating a category
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    public void testDeleteCategoryAsUser() throws Exception {
+        mockMvc.perform(delete("/categories/delete-category/" + 1L))
+                // The user is prohibited from deleting a category
+                .andExpect(status().isForbidden());
+    }
+
+    // ### Test methods when the user is not authenticated ###
+    @Test
+    public void testFindByIdAsNotAuthenticated() throws Exception {
+        mockMvc.perform(get("/categories/find-category/" + 1L))
+                .andExpect(status().isOk()) // Dont need authentication to access this endpoint
+                .andExpect(result -> {
+                    String json = result.getResponse().getContentAsString();
+                    CategoryDTO response = new ObjectMapper().readValue(json, CategoryDTO.class);
+                    assert response.name().equals("Test Category");
+                });
+    }
+
+    @Test
+    public void testCreateCategoryAsNotAuthenticated() throws Exception {
+        mockMvc.perform(post("/categories/add-category")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                // The guest user is prohibited from creating a category
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testUpdateCategoryAsNotAuthenticated() throws Exception {
+        mockMvc.perform(put("/categories/update-category/" + 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(dto)))
+                // The guest user is prohibited from updating a category
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void testDeleteCategoryAsNotAuthenticated() throws Exception {
+        mockMvc.perform(delete("/categories/delete-category/" + 1L))
+                // The guest user is prohibited from deleting a category
+                .andExpect(status().isForbidden());
     }
 }

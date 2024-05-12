@@ -25,7 +25,7 @@ public class AuditLog {
     private Long id;
     @NotBlank(message = "EventName cannot be null or empty")
     @Size(min = 5, max = 50, message = "EventName must be between 5 and 50 characters")
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String eventName;
     private String eventDescription;
     private Date timestamp;
