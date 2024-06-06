@@ -1,0 +1,6 @@
+Detected: some text
+Confidence: 99.0
+Id: 1
+Parent Id: null
+Type: LINE
+
